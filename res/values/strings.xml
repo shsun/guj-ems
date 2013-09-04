@@ -1,0 +1,30 @@
+<resources>
+	<string name="close">Schliessen</string>
+	<string name="sound">Sound an/aus</string>
+    <string name="siteId">siteId</string>
+    <string name="zoneId">zoneId</string>
+    <string name="backfillSiteId">bfSiteId</string>
+    <string name="backfillZoneId">bfZoneId</string>
+    <string name="formats">formats</string>
+    <string name="keyword">kw</string>
+    <string name="nkeyword">nkw</string>
+    <string name="geo">geo</string>
+    <string name="latitude">lat</string>
+    <string name="longitude">lon</string>
+    <string name="deviceId">uid</string>
+    <string name="attributePrefix">ems_</string>
+    <string name="baseUrl">http://vfdeprod.amobee.com/upsteed/wap/adrequest</string>
+    <string name="baseParams">tp=4&amp;prt=G+J&amp;andsdk=#version#</string>
+    <string name="amobeeAdSpace">as</string>
+    <string name="amobeeUserId">uid</string>
+    <string name="amobeeLatitude">lat</string>
+    <string name="amobeeLongitude">long</string>
+    <string name="onAdSuccess">onAdSuccess</string>
+    <string name="onAdEmpty">onAdEmpty</string>
+    <string name="onAdError">onAdError</string>
+    <string name="videoPreload">-w- Bitte einen Moment Geduld&#8230;</string>
+    <string name="videoRunning">-w- Klick auf Video öffnet Website</string>
+    <string name="connectAd"><![CDATA[<!-- <connectad>yes</connectad> -->]]></string>
+    <string name="bLevelParam">pbl</string>
+    <string name="pStatusParam">psx</string>
+</resources>

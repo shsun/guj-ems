@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/emsIntProgLayout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <ImageButton
+        android:id="@+id/emsIntCloseButton"
+        android:layout_width="28dip"
+        android:layout_height="28dip"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:background="#00000000"
+        android:contentDescription="@string/close"
+        android:scaleType="fitCenter"
+        android:src="@drawable/closebutton" />
+    
+	<ProgressBar
+	    android:id="@+id/emsIntProgBar"
+	    style="?android:attr/progressBarStyleHorizontal"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_toLeftOf="@+id/emsIntCloseButton" />
+
+	<ProgressBar
+	    android:id="@+id/emsIntSpinner"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_centerHorizontal="true"
+	    android:layout_centerVertical="true"
+	    android:indeterminate="true" />
+
+    </RelativeLayout>
+
+

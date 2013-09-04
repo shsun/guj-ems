@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="GuJEMSAdView">
+        <attr name="ems_onAdSuccess" format="string" />
+        <attr name="ems_onAdEmpty" format="string" />
+        <attr name="ems_onAdError" format="string" />
+        <attr name="ems_siteId" format="string" />
+        <attr name="ems_zoneId" format="string" />
+        <attr name="ems_bfSiteId" format="string"/>
+        <attr name="ems_bfZoneId" format="string"/>
+        <attr name="ems_uid" format="boolean" />
+        <attr name="ems_kw" format="boolean" />
+        <attr name="ems_nkw" format="boolean" />
+        <attr name="ems_geo" format="boolean" />
+        <attr name="ems_lat" format="float" />
+        <attr name="ems_lon" format="float" />
+        <attr name="ems_debug" format="boolean" />
+    </declare-styleable>
+
+</resources>
