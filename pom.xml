@@ -17,7 +17,7 @@
     <properties>
         <android.version>4.3_r1</android.version>
         <android.platform>18</android.platform>
-        <android.maven.plugin.version>3.6.0</android.maven.plugin.version>
+        <android.maven.plugin.version>3.7.1-SNAPSHOT</android.maven.plugin.version>
     </properties>
 
     <dependencies>
