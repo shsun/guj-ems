@@ -20,33 +20,31 @@ import org.ormma.controller.OrmmaSensorController;
 import de.guj.ems.mobile.sdk.util.SdkLog;
 
 /**
- * The listener interface for receiving accelerometer events.
- * The class that is interested in processing a accelerometer
- * event implements this interface, and the object created
- * with that class is registered with a component using the
+ * The listener interface for receiving accelerometer events. The class that is
+ * interested in processing a accelerometer event implements this interface, and
+ * the object created with that class is registered with a component using the
  * component's <code>addAccelListener<code> method. When
  * the accel event occurs, that object's appropriate
  * method is invoked.
- *
+ * 
  * @see AccelEvent
  */
 public class AccelListener implements SensorEventListener {
-	
+
 	private final static String TAG = "AccelListener";
 
-//constants for determining events
+	// constants for determining events
 	private static final int FORCE_THRESHOLD = 1000;
 	private static final int TIME_THRESHOLD = 100;
 	private static final int SHAKE_TIMEOUT = 500;
 	private static final int SHAKE_DURATION = 2000;
 	private static final int SHAKE_COUNT = 2;
-	
 
-	//parent controller
+	// parent controller
 	OrmmaSensorController mSensorController;
 	String mKey;
 
-	//counts of registered listeners
+	// counts of registered listeners
 	int registeredTiltListeners = 0;
 	int registeredShakeListeners = 0;
 	int registeredHeadingListeners = 0;
@@ -66,21 +64,25 @@ public class AccelListener implements SensorEventListener {
 
 	/**
 	 * Instantiates a new accel listener.
-	 *
-	 * @param ctx the ctx
-	 * @param sensorController the sensor controller
+	 * 
+	 * @param ctx
+	 *            the ctx
+	 * @param sensorController
+	 *            the sensor controller
 	 */
 	public AccelListener(Context ctx, OrmmaSensorController sensorController) {
 		// mCtx = ctx;
 		mSensorController = sensorController;
-		sensorManager = (SensorManager) ctx.getSystemService(Context.SENSOR_SERVICE);
+		sensorManager = (SensorManager) ctx
+				.getSystemService(Context.SENSOR_SERVICE);
 
 	}
 
 	/**
 	 * Sets the sensor delay.
-	 *
-	 * @param delay the new sensor delay
+	 * 
+	 * @param delay
+	 *            the new sensor delay
 	 */
 	public void setSensorDelay(int delay) {
 		mSensorDelay = delay;
@@ -94,7 +96,7 @@ public class AccelListener implements SensorEventListener {
 	 * Start tracking tilt.
 	 */
 	public void startTrackingTilt() {
-		if (registeredTiltListeners == 0) 
+		if (registeredTiltListeners == 0)
 			start();
 		registeredTiltListeners++;
 	}
@@ -104,7 +106,7 @@ public class AccelListener implements SensorEventListener {
 	 */
 	public void stopTrackingTilt() {
 		if (registeredTiltListeners > 0 && --registeredTiltListeners == 0) {
-				stop();
+			stop();
 		}
 	}
 
@@ -124,9 +126,9 @@ public class AccelListener implements SensorEventListener {
 	 */
 	public void stopTrackingShake() {
 		if (registeredShakeListeners > 0 && --registeredShakeListeners == 0) {
-				setSensorDelay(SensorManager.SENSOR_DELAY_NORMAL);
-				stop();
-			}
+			setSensorDelay(SensorManager.SENSOR_DELAY_NORMAL);
+			stop();
+		}
 	}
 
 	/**
@@ -142,9 +144,11 @@ public class AccelListener implements SensorEventListener {
 	 * Start mag.
 	 */
 	private void startMag() {
-		List<Sensor> list = this.sensorManager.getSensorList(Sensor.TYPE_MAGNETIC_FIELD);
+		List<Sensor> list = this.sensorManager
+				.getSensorList(Sensor.TYPE_MAGNETIC_FIELD);
 		if (list.size() > 0) {
-			this.sensorManager.registerListener(this, list.get(0), mSensorDelay);
+			this.sensorManager
+					.registerListener(this, list.get(0), mSensorDelay);
 			start();
 		} else {
 			// Call fail
@@ -164,9 +168,11 @@ public class AccelListener implements SensorEventListener {
 	 * Start.
 	 */
 	private void start() {
-		List<Sensor> list = this.sensorManager.getSensorList(Sensor.TYPE_ACCELEROMETER);
+		List<Sensor> list = this.sensorManager
+				.getSensorList(Sensor.TYPE_ACCELEROMETER);
 		if (list.size() > 0) {
-			this.sensorManager.registerListener(this, list.get(0), mSensorDelay);
+			this.sensorManager
+					.registerListener(this, list.get(0), mSensorDelay);
 		} else {
 			// Call fail
 		}
@@ -176,20 +182,32 @@ public class AccelListener implements SensorEventListener {
 	 * Stop.
 	 */
 	public void stop() {
-		if ((registeredHeadingListeners == 0) && (registeredShakeListeners == 0) && (registeredTiltListeners == 0)) {
+		if ((registeredHeadingListeners == 0)
+				&& (registeredShakeListeners == 0)
+				&& (registeredTiltListeners == 0)) {
 			sensorManager.unregisterListener(this);
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see android.hardware.SensorEventListener#onAccuracyChanged(android.hardware.Sensor, int)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * android.hardware.SensorEventListener#onAccuracyChanged(android.hardware
+	 * .Sensor, int)
 	 */
+	@Override
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
 	}
 
-	/* (non-Javadoc)
-	 * @see android.hardware.SensorEventListener#onSensorChanged(android.hardware.SensorEvent)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * android.hardware.SensorEventListener#onSensorChanged(android.hardware
+	 * .SensorEvent)
 	 */
+	@Override
 	public void onSensorChanged(SensorEvent event) {
 		switch (event.sensor.getType()) {
 		case Sensor.TYPE_MAGNETIC_FIELD:
@@ -225,14 +243,14 @@ public class AccelListener implements SensorEventListener {
 
 			if ((now - mLastTime) > TIME_THRESHOLD) {
 				long diff = now - mLastTime;
-				
-				float speed = Math.abs(mAccVals[0] + mAccVals[1]
-						+ mAccVals[2] - mLastAccVals[0]
-						- mLastAccVals[1] - mLastAccVals[2])
+
+				float speed = Math.abs(mAccVals[0] + mAccVals[1] + mAccVals[2]
+						- mLastAccVals[0] - mLastAccVals[1] - mLastAccVals[2])
 						/ diff * 10000;
 				if (speed > FORCE_THRESHOLD) {
 
-					if ((++mShakeCount >= SHAKE_COUNT) && (now - mLastShake > SHAKE_DURATION)) {
+					if ((++mShakeCount >= SHAKE_COUNT)
+							&& (now - mLastShake > SHAKE_DURATION)) {
 						mLastShake = now;
 						mShakeCount = 0;
 						mSensorController.onShake();
@@ -240,8 +258,7 @@ public class AccelListener implements SensorEventListener {
 					mLastForce = now;
 				}
 				mLastTime = now;
-				mSensorController.onTilt(mAccVals[0], mAccVals[1],
-						mAccVals[2]);
+				mSensorController.onTilt(mAccVals[0], mAccVals[1], mAccVals[2]);
 
 			}
 		}
@@ -249,7 +266,7 @@ public class AccelListener implements SensorEventListener {
 
 	/**
 	 * Gets the heading.
-	 *
+	 * 
 	 * @return the heading
 	 */
 	public float getHeading() {

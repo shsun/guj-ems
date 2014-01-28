@@ -11,7 +11,8 @@ package org.ormma.controller.util;
  * The Enum NavigationStringEnum.
  */
 public enum NavigationStringEnum {
-	NONE("none"), CLOSE("close"), BACK("back"), FORWARD("forward"), REFRESH("refresh");
+	NONE("none"), CLOSE("close"), BACK("back"), FORWARD("forward"), REFRESH(
+			"refresh");
 
 	private String text;
 

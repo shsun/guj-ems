@@ -9,7 +9,8 @@ package org.ormma.controller.util;
 
 public enum TransitionStringEnum {
 
-	DEFAULT("default"), DISSOLVE("dissolve"), FADE("fade"), ROLL("roll"), SLIDE("slide"), ZOOM("zoom"), NONE("none");
+	DEFAULT("default"), DISSOLVE("dissolve"), FADE("fade"), ROLL("roll"), SLIDE(
+			"slide"), ZOOM("zoom"), NONE("none");
 
 	private String text;
 

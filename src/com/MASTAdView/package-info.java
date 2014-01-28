@@ -50,7 +50,7 @@
  * <P>
  * @see MASTAdView See the MASTAdView class documentation 
  * for more information and details about customizing the appearance and content of ads for your application.
- */ 
+ */
 package com.MASTAdView;
 
 //

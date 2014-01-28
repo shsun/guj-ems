@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
@@ -85,14 +86,16 @@ public final class InterstitialActivity extends Activity {
 	private Intent target;
 
 	private int time = -1;
-	
+
 	private boolean withProgress = false;
 
 	private InterstitialThread updateThread;
 
 	private void createView(Bundle savedInstanceState) {
 		String adData = getIntent().getExtras().getString("data");
-		this.withProgress = this.time > 0 && !adData.startsWith(getResources().getString(R.string.connectAd));
+		this.withProgress = this.time > 0
+				&& !adData.startsWith(getResources().getString(
+						R.string.connectAd));
 		// (1) set view layout
 		setContentView(this.withProgress ? R.layout.interstitial_progress
 				: R.layout.interstitial_noprogress);
@@ -105,20 +108,20 @@ public final class InterstitialActivity extends Activity {
 		this.adView = new GuJEMSAdView(InterstitialActivity.this);
 
 		// (3) configure interstitial adview
-		
-		adView.loadData(adData, "text/html",
-				"utf-8");
+
+		adView.loadData(adData, "text/html", "utf-8");
 		RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
-				RelativeLayout.LayoutParams.MATCH_PARENT,
-				RelativeLayout.LayoutParams.WRAP_CONTENT);
-		lp.addRule(RelativeLayout.BELOW, this.withProgress ? R.id.emsIntCloseButton
-				: R.id.emsIntCloseButton2);
+				LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+		lp.addRule(RelativeLayout.BELOW,
+				this.withProgress ? R.id.emsIntCloseButton
+						: R.id.emsIntCloseButton2);
 		adView.setLayoutParams(lp);
 
 		// (4) configure close button
 		ImageButton b = (ImageButton) findViewById(this.withProgress ? R.id.emsIntCloseButton
 				: R.id.emsIntCloseButton2);
 		b.setOnClickListener(new View.OnClickListener() {
+			@Override
 			public void onClick(View v) {
 				if (updateThread != null && updateThread.isAlive()) {
 					try {
@@ -152,7 +155,7 @@ public final class InterstitialActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if (status < 0) {
-			//this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+			// this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 			this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 			this.target = (Intent) getIntent().getExtras().get("target");
 			Integer time = (Integer) getIntent().getExtras().get("timeout");
@@ -235,31 +238,28 @@ public final class InterstitialActivity extends Activity {
 					t0 = System.currentTimeMillis();
 				}
 
+				@Override
 				public void run() {
 					boolean loaded = false;
 					while (InterstitialThread.SHOW) {
 						if (!loaded && adView.isPageFinished()) {
-							
-							if (root == null) {
-								SdkLog.e(TAG, "This should not happen... interstitial layout is null");
-								SdkLog.w(TAG, "Interstitial Thread = " + InterstitialThread.PAUSED + "/" + InterstitialThread.SHOW);
-								SdkLog.w(TAG, "status = " + status);
-								break;
+
+							if (root == null || root.getHandler() == null) {
+								SdkLog.w(TAG,
+										"Interstitial root view or its handler is null!");
+								Thread.yield();
+								//status = FINISHED;
+							} else {
+								loaded = true;
+								root.getHandler().post(new Runnable() {
+									@Override
+									public void run() {
+										root.removeView(spinner);
+										root.addView(adView);
+										fetchTime();
+									}
+								});
 							}
-							
-							loaded = true;
-							//TODO NPE when rotating device while loading 
-							root.getHandler().post(new Runnable() {
-								@Override
-								public void run() {
-									SdkLog.w(
-											TAG,
-											"root is " + root);
-									root.removeView(spinner);
-									root.addView(adView);
-									fetchTime();
-								}
-							});
 						} else if (loaded && !InterstitialThread.PAUSED) {
 							if (withProgress && t0 > 0) {
 								int t1 = (int) (System.currentTimeMillis() - t0);
@@ -319,7 +319,7 @@ public final class InterstitialActivity extends Activity {
 			SdkLog.i(TAG, "Finishing interstitial activity.");
 		}
 	}
-	
+
 	@Override
 	public void onBackPressed() {
 		if (updateThread != null && updateThread.isAlive()) {
@@ -333,6 +333,5 @@ public final class InterstitialActivity extends Activity {
 		}
 		super.onBackPressed();
 	}
-	
 
 }

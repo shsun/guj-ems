@@ -6,7 +6,6 @@
  *  be found in the AUTHORS file in the root of the source tree.
  */
 
-
 package org.ormma.controller;
 
 public class Defines {
@@ -23,5 +22,5 @@ public class Defines {
 		public static final String TILT_CHANGE = "tiltChange";
 		public static final String SHAKE = "shake";
 	};
-	
+
 }

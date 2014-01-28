@@ -45,6 +45,8 @@ import android.os.Environment;
 import android.os.StatFs;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Images;
+import android.provider.MediaStore.Images.ImageColumns;
+import android.provider.MediaStore.MediaColumns;
 import android.view.View;
 import android.view.Window;
 import android.webkit.JavascriptInterface;
@@ -59,11 +61,15 @@ public class OrmmaAssetController extends OrmmaController {
 
 	private final static String SdkLog_TAG = "OrmmaAssetController";
 
-	//public final static float WEBVIEW_VIEWPORT_SCALE = Screen.getScreenWidth() / 320.0f;
-	
-	//private final static byte [] WEBVIEW_VIEWPORT_META = ("<meta name='viewport' content='target-densitydpi=device-dpi, width=320, user-scalable=no, initial-scale=" + WEBVIEW_VIEWPORT_SCALE + "' />").getBytes();
-	
-	private final static byte [] WEBVIEW_VIEWPORT_META = ("<meta name='viewport' content='initial-scale=1.0, user-scalable=no' />").getBytes();
+	// public final static float WEBVIEW_VIEWPORT_SCALE =
+	// Screen.getScreenWidth() / 320.0f;
+
+	// private final static byte [] WEBVIEW_VIEWPORT_META =
+	// ("<meta name='viewport' content='target-densitydpi=device-dpi, width=320, user-scalable=no, initial-scale="
+	// + WEBVIEW_VIEWPORT_SCALE + "' />").getBytes();
+
+	private final static byte[] WEBVIEW_VIEWPORT_META = ("<meta name='viewport' content='width=device-width, initial-scale=1.0, user-scalable=no' />")
+			.getBytes();
 
 	private final static byte[] WEBVIEW_BODY_STYLE = "<body style=\"margin:0; padding:0; overflow:hidden; background-color:transparent;margin: 0px; padding: 0px; display:-webkit-box;-webkit-box-orient:horizontal;-webkit-box-pack:center;-webkit-box-align:center;\">"
 			.getBytes();
@@ -127,7 +133,8 @@ public class OrmmaAssetController extends OrmmaController {
 	 */
 	public OrmmaAssetController(OrmmaView adView, Context c) {
 		super(adView, c);
-		//SdkLog.i(SdkLog_TAG, "WebView viewport scale meta was set to " + WEBVIEW_VIEWPORT_SCALE);
+		// SdkLog.i(SdkLog_TAG, "WebView viewport scale meta was set to " +
+		// WEBVIEW_VIEWPORT_SCALE);
 	}
 
 	/**
@@ -265,6 +272,7 @@ public class OrmmaAssetController extends OrmmaController {
 	 */
 	public String copyTextFromJarIntoAssetDir(String alias, String source) {
 		InputStream in = null;
+		JarFile jf = null;
 		try {
 			URL url = OrmmaAssetController.class.getClassLoader().getResource(
 					source);
@@ -275,7 +283,7 @@ public class OrmmaAssetController extends OrmmaController {
 			int pos = file.indexOf("!");
 			if (pos > 0)
 				file = file.substring(0, pos);
-			JarFile jf = new JarFile(file);
+			jf = new JarFile(file);
 			JarEntry entry = jf.getJarEntry(source);
 			in = jf.getInputStream(entry);
 			String name = writeToDisk(in, alias, false);
@@ -291,6 +299,14 @@ public class OrmmaAssetController extends OrmmaController {
 				}
 				in = null;
 			}
+			if (jf != null) {
+				try {
+					jf.close();
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
+				jf = null;
+			}
 		}
 		return null;
 	}
@@ -303,7 +319,7 @@ public class OrmmaAssetController extends OrmmaController {
 		File adDir = new File(filesDir + java.io.File.separator + "ad");
 		deleteDirectory(adDir);
 	}
-	
+
 	public void deleteOldAds(String localAdDir) {
 		File adDir = new File(localAdDir);
 		deleteDirectory(adDir);
@@ -548,7 +564,7 @@ public class OrmmaAssetController extends OrmmaController {
 		ListIterator<T> i = list.listIterator();
 		for (int j = 0; j < a.length; j++) {
 			i.next();
-			i.set((T) a[j]);
+			i.set(a[j]);
 		}
 	}
 
@@ -559,32 +575,30 @@ public class OrmmaAssetController extends OrmmaController {
 	 */
 	@Override
 	public void stopAllListeners() {
-		// TODO Auto-generated method stub
-
 	}
 
 	private Uri addToGallery(File img, String title, String name,
 			String description, String dateTaken, String mimeType) {
 		ContentValues image = new ContentValues();
 
-		image.put(Images.Media.TITLE, title);
-		image.put(Images.Media.DISPLAY_NAME, name);
-		image.put(Images.Media.DESCRIPTION, description);
-		image.put(Images.Media.DATE_ADDED, dateTaken);
-		image.put(Images.Media.DATE_TAKEN, dateTaken);
-		image.put(Images.Media.DATE_MODIFIED, dateTaken);
-		image.put(Images.Media.MIME_TYPE, mimeType);
-		image.put(Images.Media.ORIENTATION, 0);
+		image.put(MediaColumns.TITLE, title);
+		image.put(MediaColumns.DISPLAY_NAME, name);
+		image.put(ImageColumns.DESCRIPTION, description);
+		image.put(MediaColumns.DATE_ADDED, dateTaken);
+		image.put(ImageColumns.DATE_TAKEN, dateTaken);
+		image.put(MediaColumns.DATE_MODIFIED, dateTaken);
+		image.put(MediaColumns.MIME_TYPE, mimeType);
+		image.put(ImageColumns.ORIENTATION, 0);
 
 		File parent = img.getParentFile();
 		String path = parent.toString().toLowerCase(Locale.GERMAN);
 		String fname = parent.getName().toLowerCase(Locale.GERMAN);
-		
+
 		image.put(Images.ImageColumns.BUCKET_ID, path.hashCode());
 		image.put(Images.ImageColumns.BUCKET_DISPLAY_NAME, fname);
-		image.put(Images.Media.SIZE, img.length());
+		image.put(MediaColumns.SIZE, img.length());
 
-		image.put(Images.Media.DATA, img.getAbsolutePath());
+		image.put(MediaColumns.DATA, img.getAbsolutePath());
 
 		return mContext.getContentResolver().insert(
 				MediaStore.Images.Media.EXTERNAL_CONTENT_URI, image);
@@ -921,7 +935,7 @@ public class OrmmaAssetController extends OrmmaController {
 		}
 		boolean hasHTMLWrap = data.indexOf("</html>") >= 0;
 		FileOutputStream out = getAssetOutputString(file);
-		
+
 		if (!hasHTMLWrap) {
 			out.write("<!DOCTYPE html>".getBytes());
 			out.write("<html>".getBytes());
@@ -932,10 +946,12 @@ public class OrmmaAssetController extends OrmmaController {
 					.getBytes());
 			out.write(("<script src=\"file://" + ormmaPath + "\" type=\"text/javascript\"></script>")
 					.getBytes());
-		}
-		else {
-			data = data.replace("<head>", ("<head><script src=\"file://" + bridgePath + "\" type=\"text/javascript\"></script>")
-			+ ("<script src=\"file://" + ormmaPath + "\" type=\"text/javascript\"></script>"));
+		} else {
+			data = data
+					.replace(
+							"<head>",
+							("<head><script src=\"file://" + bridgePath + "\" type=\"text/javascript\"></script>")
+									+ ("<script src=\"file://" + ormmaPath + "\" type=\"text/javascript\"></script>"));
 		}
 
 		if (injection != null) {

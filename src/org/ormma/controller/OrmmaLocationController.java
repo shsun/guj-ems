@@ -20,12 +20,12 @@ import android.webkit.JavascriptInterface;
 import de.guj.ems.mobile.sdk.util.SdkLog;
 
 /**
- * The Class OrmmaLocationController.  Ormma controller for interacting with lbs
+ * The Class OrmmaLocationController. Ormma controller for interacting with lbs
  */
 public class OrmmaLocationController extends OrmmaController {
 
 	private static final String SdkLog_TAG = "OrmmaLocationController";
-	
+
 	private LocationManager mLocationManager;
 	private boolean hasPermission = false;
 	final int INTERVAL = 1000;
@@ -34,21 +34,26 @@ public class OrmmaLocationController extends OrmmaController {
 	private int mLocListenerCount;
 	private boolean allowLocationServices = true;
 	protected boolean hasLocation = false;
-	
+
 	/**
 	 * Instantiates a new ormma location controller.
-	 *
-	 * @param adView the ad view
-	 * @param context the context
+	 * 
+	 * @param adView
+	 *            the ad view
+	 * @param context
+	 *            the context
 	 */
 	public OrmmaLocationController(OrmmaView adView, Context context) {
 		super(adView, context);
 		try {
-			mLocationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+			mLocationManager = (LocationManager) context
+					.getSystemService(Context.LOCATION_SERVICE);
 			if (mLocationManager.getProvider(LocationManager.GPS_PROVIDER) != null)
-				mGps = new LocListener(context, INTERVAL, this, LocationManager.GPS_PROVIDER);
+				mGps = new LocListener(context, INTERVAL, this,
+						LocationManager.GPS_PROVIDER);
 			if (mLocationManager.getProvider(LocationManager.NETWORK_PROVIDER) != null)
-				mNetwork = new LocListener(context, INTERVAL, this, LocationManager.NETWORK_PROVIDER);
+				mNetwork = new LocListener(context, INTERVAL, this,
+						LocationManager.NETWORK_PROVIDER);
 			hasPermission = true;
 		} catch (SecurityException e) {
 
@@ -56,7 +61,8 @@ public class OrmmaLocationController extends OrmmaController {
 	}
 
 	/**
-	 * @param flag - Should the location services be enabled / not.
+	 * @param flag
+	 *            - Should the location services be enabled / not.
 	 */
 	@JavascriptInterface
 	public void allowLocationServices(boolean flag) {
@@ -69,16 +75,16 @@ public class OrmmaLocationController extends OrmmaController {
 	@JavascriptInterface
 	public boolean allowLocationServices() {
 		return allowLocationServices;
-	}	
-	
-	private static String formatLocation(Location loc)
-	{
-		return "{ lat: " + loc.getLatitude() + ", lon: " + loc.getLongitude() + ", acc: " + loc.getAccuracy() +"}";
 	}
-	
+
+	private static String formatLocation(Location loc) {
+		return "{ lat: " + loc.getLatitude() + ", lon: " + loc.getLongitude()
+				+ ", acc: " + loc.getAccuracy() + "}";
+	}
+
 	/**
 	 * Gets the location.
-	 *
+	 * 
 	 * @return the location
 	 */
 	@JavascriptInterface
@@ -138,12 +144,14 @@ public class OrmmaLocationController extends OrmmaController {
 
 	/**
 	 * Success.
-	 *
-	 * @param loc the loc
+	 * 
+	 * @param loc
+	 *            the loc
 	 */
 	@JavascriptInterface
 	public void success(Location loc) {
-		String script = "window.ormmaview.fireChangeEvent({ location: "+ formatLocation(loc) + "})";
+		String script = "window.ormmaview.fireChangeEvent({ location: "
+				+ formatLocation(loc) + "})";
 		SdkLog.d(SdkLog_TAG, script);
 		mOrmmaView.injectJavaScript(script);
 	}
@@ -154,10 +162,13 @@ public class OrmmaLocationController extends OrmmaController {
 	@JavascriptInterface
 	public void fail() {
 		SdkLog.e(SdkLog_TAG, "Location can't be determined");
-		mOrmmaView.injectJavaScript("window.ormmaview.fireErrorEvent(\"Location cannot be identified\", \"OrmmaLocationController\")");
+		mOrmmaView
+				.injectJavaScript("window.ormmaview.fireErrorEvent(\"Location cannot be identified\", \"OrmmaLocationController\")");
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ormma.controller.OrmmaController#stopAllListeners()
 	 */
 	@Override
@@ -172,7 +183,7 @@ public class OrmmaLocationController extends OrmmaController {
 		} catch (Exception e) {
 		}
 	}
-	
+
 	@JavascriptInterface
 	public boolean hasLocation() {
 		return hasLocation;

@@ -24,30 +24,34 @@ import android.webkit.URLUtil;
 import de.guj.ems.mobile.sdk.util.SdkLog;
 
 /**
- * The Class OrmmaDisplayController.  A ormma controller for handling display related operations
+ * The Class OrmmaDisplayController. A ormma controller for handling display
+ * related operations
  */
 public class OrmmaDisplayController extends OrmmaController {
 
-	//tag for SdkLogging
+	// tag for SdkLogging
 	private static final String SdkLog_TAG = "OrmmaDisplayController";
-	
+
 	private WindowManager mWindowManager;
 	private boolean bMaxSizeSet = false;
 	private int mMaxWidth = -1;
 	private int mMaxHeight = -1;
 	private OrmmaConfigurationBroadcastReceiver mBroadCastReceiver;
 	private float mDensity;
-	
+
 	/**
 	 * Instantiates a new ormma display controller.
-	 *
-	 * @param adView the ad view
-	 * @param c the context
+	 * 
+	 * @param adView
+	 *            the ad view
+	 * @param c
+	 *            the context
 	 */
 	public OrmmaDisplayController(OrmmaView adView, Context c) {
 		super(adView, c);
 		DisplayMetrics metrics = new DisplayMetrics();
-		mWindowManager = (WindowManager) c.getSystemService(Context.WINDOW_SERVICE);
+		mWindowManager = (WindowManager) c
+				.getSystemService(Context.WINDOW_SERVICE);
 		mWindowManager.getDefaultDisplay().getMetrics(metrics);
 		mDensity = metrics.density;
 
@@ -55,110 +59,154 @@ public class OrmmaDisplayController extends OrmmaController {
 
 	/**
 	 * Resize the view.
-	 *
-	 * @param width the width
-	 * @param height the height
+	 * 
+	 * @param width
+	 *            the width
+	 * @param height
+	 *            the height
 	 */
 	@JavascriptInterface
 	public void resize(int width, int height) {
 		SdkLog.d(SdkLog_TAG, "resize: width: " + width + " height: " + height);
-		if (((mMaxHeight > 0) && (height > mMaxHeight)) || ((mMaxWidth > 0) && (width > mMaxWidth))) {
+		if (((mMaxHeight > 0) && (height > mMaxHeight))
+				|| ((mMaxWidth > 0) && (width > mMaxWidth))) {
 			mOrmmaView.raiseError("Maximum size exceeded", "resize");
 		} else
-			mOrmmaView.resize((int) (mDensity * width), (int) (mDensity * height));
+			mOrmmaView.resize((int) (mDensity * width),
+					(int) (mDensity * height));
 
 	}
 
 	/**
 	 * Open a browser
-	 *
-	 * @param url the url
-	 * @param back show the back button
-	 * @param forward show the forward button
-	 * @param refresh show the refresh button
+	 * 
+	 * @param url
+	 *            the url
+	 * @param back
+	 *            show the back button
+	 * @param forward
+	 *            show the forward button
+	 * @param refresh
+	 *            show the refresh button
 	 */
 	@JavascriptInterface
 	public void open(String url, boolean back, boolean forward, boolean refresh) {
-		SdkLog.d(SdkLog_TAG, "open: url: " + url + " back: " + back + " forward: " + forward + " refresh: " + refresh);
-		if(!URLUtil.isValidUrl(url)){
+		SdkLog.d(SdkLog_TAG, "open: url: " + url + " back: " + back
+				+ " forward: " + forward + " refresh: " + refresh);
+		if (!URLUtil.isValidUrl(url)) {
 			mOrmmaView.raiseError("Invalid url", "open");
-		}else{
+		} else {
 			mOrmmaView.open(url, back, forward, refresh);
 		}
-		
 
 	}
-	
-	/**Open map
-	 * @param url - map url
-	 * @param fullscreen - boolean indicating whether map to be launched in full screen
+
+	/**
+	 * Open map
+	 * 
+	 * @param url
+	 *            - map url
+	 * @param fullscreen
+	 *            - boolean indicating whether map to be launched in full screen
 	 */
 	@JavascriptInterface
 	public void openMap(String url, boolean fullscreen) {
 		SdkLog.d(SdkLog_TAG, "openMap: url: " + url);
 		mOrmmaView.openMap(url, fullscreen);
 	}
-	
 
 	/**
 	 * Play audio
-	 * @param url - audio url to be played
-	 * @param autoPlay - if audio should play immediately
-	 * @param controls - should native player controls be visible
-	 * @param loop - should video start over again after finishing
-	 * @param position - should audio be included with ad content
-	 * @param startStyle - normal/full screen (if audio should play in native full screen mode)
-	 * @param stopStyle - normal/exit (exit if player should exit after audio stops)
+	 * 
+	 * @param url
+	 *            - audio url to be played
+	 * @param autoPlay
+	 *            - if audio should play immediately
+	 * @param controls
+	 *            - should native player controls be visible
+	 * @param loop
+	 *            - should video start over again after finishing
+	 * @param position
+	 *            - should audio be included with ad content
+	 * @param startStyle
+	 *            - normal/full screen (if audio should play in native full
+	 *            screen mode)
+	 * @param stopStyle
+	 *            - normal/exit (exit if player should exit after audio stops)
 	 */
 	@JavascriptInterface
-	public void playAudio(String url, boolean autoPlay, boolean controls, boolean loop, boolean position, String startStyle, String stopStyle) {
-		SdkLog.d(SdkLog_TAG, "playAudio: url: " + url + " autoPlay: " + autoPlay + " controls: " + controls + " loop: " + loop + " position: " + position + " startStyle: " + startStyle + " stopStyle: "+stopStyle);
-		if(!URLUtil.isValidUrl(url)){
+	public void playAudio(String url, boolean autoPlay, boolean controls,
+			boolean loop, boolean position, String startStyle, String stopStyle) {
+		SdkLog.d(SdkLog_TAG, "playAudio: url: " + url + " autoPlay: "
+				+ autoPlay + " controls: " + controls + " loop: " + loop
+				+ " position: " + position + " startStyle: " + startStyle
+				+ " stopStyle: " + stopStyle);
+		if (!URLUtil.isValidUrl(url)) {
 			mOrmmaView.raiseError("Invalid url", "playAudio");
-		}else{
-			mOrmmaView.playAudio(url, autoPlay, controls, loop, position, startStyle, stopStyle);
+		} else {
+			mOrmmaView.playAudio(url, autoPlay, controls, loop, position,
+					startStyle, stopStyle);
 		}
-		
+
 	}
-	
-	
+
 	/**
 	 * Play video
-	 * @param url - video url to be played
-	 * @param audioMuted - should audio be muted
-	 * @param autoPlay - should video play immediately
-	 * @param controls  - should native player controls be visible
-	 * @param loop - should video start over again after finishing
-	 * @param position - top and left coordinates of video in pixels if video should play inline
-	 * @param startStyle - normal/fullscreen (if video should play in native full screen mode)
-	 * @param stopStyle - normal/exit (exit if player should exit after video stops)
+	 * 
+	 * @param url
+	 *            - video url to be played
+	 * @param audioMuted
+	 *            - should audio be muted
+	 * @param autoPlay
+	 *            - should video play immediately
+	 * @param controls
+	 *            - should native player controls be visible
+	 * @param loop
+	 *            - should video start over again after finishing
+	 * @param position
+	 *            - top and left coordinates of video in pixels if video should
+	 *            play inline
+	 * @param startStyle
+	 *            - normal/fullscreen (if video should play in native full
+	 *            screen mode)
+	 * @param stopStyle
+	 *            - normal/exit (exit if player should exit after video stops)
 	 */
 	@JavascriptInterface
-	public void playVideo(String url, boolean audioMuted, boolean autoPlay, boolean controls, boolean loop, int[] position, String startStyle, String stopStyle) {
-		SdkLog.d(SdkLog_TAG, "playVideo: url: " + url + " audioMuted: " + audioMuted + " autoPlay: " + autoPlay + " controls: " + controls + " loop: " + loop + " x: " + position[0] + 
-				" y: " + position[1] + " width: " + position[2] + " height: " + position[3] + " startStyle: " + startStyle + " stopStyle: " + stopStyle);
+	public void playVideo(String url, boolean audioMuted, boolean autoPlay,
+			boolean controls, boolean loop, int[] position, String startStyle,
+			String stopStyle) {
+		SdkLog.d(SdkLog_TAG, "playVideo: url: " + url + " audioMuted: "
+				+ audioMuted + " autoPlay: " + autoPlay + " controls: "
+				+ controls + " loop: " + loop + " x: " + position[0] + " y: "
+				+ position[1] + " width: " + position[2] + " height: "
+				+ position[3] + " startStyle: " + startStyle + " stopStyle: "
+				+ stopStyle);
 		Dimensions d = null;
-		if(position[0] != -1) {
+		if (position[0] != -1) {
 			d = new Dimensions();
 			d.x = position[0];
 			d.y = position[1];
 			d.width = position[2];
 			d.height = position[3];
 			d = getDeviceDimensions(d);
-		}		
-		if(!URLUtil.isValidUrl(url)){
+		}
+		if (!URLUtil.isValidUrl(url)) {
 			mOrmmaView.raiseError("Invalid url", "playVideo");
-		}else{
-			mOrmmaView.playVideo(url, audioMuted, autoPlay, controls, loop, d, startStyle, stopStyle);
+		} else {
+			mOrmmaView.playVideo(url, audioMuted, autoPlay, controls, loop, d,
+					startStyle, stopStyle);
 		}
 	}
 
 	/**
 	 * Get Device dimensions
-	 * @param d - dimensions received from java script
+	 * 
+	 * @param d
+	 *            - dimensions received from java script
 	 * @return
 	 */
-	private Dimensions getDeviceDimensions(Dimensions d){
+	private Dimensions getDeviceDimensions(Dimensions d) {
 		d.width *= mDensity;
 		d.height *= mDensity;
 		d.x *= mDensity;
@@ -177,34 +225,38 @@ public class OrmmaDisplayController extends OrmmaController {
 		}
 		return d;
 	}
-	
+
 	/**
 	 * Expand the view
-	 *
-	 * @param dimensions the dimensions to expand to
-	 * @param URL the uRL
-	 * @param properties the properties for the expansion
+	 * 
+	 * @param dimensions
+	 *            the dimensions to expand to
+	 * @param URL
+	 *            the uRL
+	 * @param properties
+	 *            the properties for the expansion
 	 */
 	@JavascriptInterface
 	public void expand(String dimensions, String URL, String properties) {
-        SdkLog.d(SdkLog_TAG, "expand: dimensions: " + dimensions + " url: " + URL + " properties: " + properties);
+		SdkLog.d(SdkLog_TAG, "expand: dimensions: " + dimensions + " url: "
+				+ URL + " properties: " + properties);
 		try {
-			Dimensions d = (Dimensions) getFromJSON(new JSONObject(dimensions), Dimensions.class);
-			mOrmmaView.expand(getDeviceDimensions(d), URL, (Properties) getFromJSON(new JSONObject(properties), Properties.class));
+			Dimensions d = (Dimensions) getFromJSON(new JSONObject(dimensions),
+					Dimensions.class);
+			mOrmmaView.expand(
+					getDeviceDimensions(d),
+					URL,
+					(Properties) getFromJSON(new JSONObject(properties),
+							Properties.class));
 		} catch (NumberFormatException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (NullPointerException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -238,7 +290,7 @@ public class OrmmaDisplayController extends OrmmaController {
 
 	/**
 	 * Checks if is visible.
-	 *
+	 * 
 	 * @return true, if is visible
 	 */
 	@JavascriptInterface
@@ -248,20 +300,21 @@ public class OrmmaDisplayController extends OrmmaController {
 
 	/**
 	 * Dimensions.
-	 *
+	 * 
 	 * @return the string
 	 */
 	@JavascriptInterface
 	public String dimensions() {
-		return "{ \"top\" :" + (int) (mOrmmaView.getTop() / mDensity) + "," + "\"left\" :"
-				+ (int) (mOrmmaView.getLeft() / mDensity) + "," + "\"bottom\" :"
-				+ (int) (mOrmmaView.getBottom() / mDensity) + "," + "\"right\" :"
+		return "{ \"top\" :" + (int) (mOrmmaView.getTop() / mDensity) + ","
+				+ "\"left\" :" + (int) (mOrmmaView.getLeft() / mDensity) + ","
+				+ "\"bottom\" :" + (int) (mOrmmaView.getBottom() / mDensity)
+				+ "," + "\"right\" :"
 				+ (int) (mOrmmaView.getRight() / mDensity) + "}";
 	}
 
 	/**
 	 * Gets the orientation.
-	 *
+	 * 
 	 * @return the orientation
 	 */
 	@JavascriptInterface
@@ -285,13 +338,13 @@ public class OrmmaDisplayController extends OrmmaController {
 			ret = 270;
 			break;
 		}
-		SdkLog.d(SdkLog_TAG, "getOrientation: " +  ret);
+		SdkLog.d(SdkLog_TAG, "getOrientation: " + ret);
 		return ret;
 	}
 
 	/**
 	 * Gets the screen size.
-	 *
+	 * 
 	 * @return the screen size
 	 */
 	@JavascriptInterface
@@ -299,13 +352,14 @@ public class OrmmaDisplayController extends OrmmaController {
 		DisplayMetrics metrics = new DisplayMetrics();
 		mWindowManager.getDefaultDisplay().getMetrics(metrics);
 
-		return "{ width: " + (int) (metrics.widthPixels / metrics.density) + ", " + "height: "
+		return "{ width: " + (int) (metrics.widthPixels / metrics.density)
+				+ ", " + "height: "
 				+ (int) (metrics.heightPixels / metrics.density) + "}";
 	}
 
 	/**
 	 * Gets the size.
-	 *
+	 * 
 	 * @return the size
 	 */
 	@JavascriptInterface
@@ -315,22 +369,25 @@ public class OrmmaDisplayController extends OrmmaController {
 
 	/**
 	 * Gets the max size.
-	 *
+	 * 
 	 * @return the max size
 	 */
 	@JavascriptInterface
 	public String getMaxSize() {
 		if (bMaxSizeSet)
-			return "{ width: " + mMaxWidth + ", " + "height: " + mMaxHeight + "}";
+			return "{ width: " + mMaxWidth + ", " + "height: " + mMaxHeight
+					+ "}";
 		else
 			return getScreenSize();
 	}
 
 	/**
 	 * Sets the max size.
-	 *
-	 * @param w the w
-	 * @param h the h
+	 * 
+	 * @param w
+	 *            the w
+	 * @param h
+	 *            the h
 	 */
 	@JavascriptInterface
 	public void setMaxSize(int w, int h) {
@@ -341,25 +398,30 @@ public class OrmmaDisplayController extends OrmmaController {
 
 	/**
 	 * On orientation changed.
-	 *
-	 * @param orientation the orientation
+	 * 
+	 * @param orientation
+	 *            the orientation
 	 */
 	public void onOrientationChanged(int orientation) {
-		String script = "window.ormmaview.fireChangeEvent({ orientation: " + orientation + "});";
-		SdkLog.d(SdkLog_TAG, script );
+		String script = "window.ormmaview.fireChangeEvent({ orientation: "
+				+ orientation + "});";
+		SdkLog.d(SdkLog_TAG, script);
 		mOrmmaView.injectJavaScript(script);
 	}
 
 	/**
 	 * SdkLog html.
-	 *
-	 * @param html the html
+	 * 
+	 * @param html
+	 *            the html
 	 */
 	public void SdkLogHTML(String html) {
 		SdkLog.d(SdkLog_TAG, html);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ormma.controller.OrmmaController#stopAllListeners()
 	 */
 	@Override
@@ -375,14 +437,16 @@ public class OrmmaDisplayController extends OrmmaController {
 		} catch (Exception e) {
 		}
 	}
-	
+
 	@JavascriptInterface
 	public void startConfigurationListener() {
 		try {
-			if(mBroadCastReceiver == null) 
-				mBroadCastReceiver = new OrmmaConfigurationBroadcastReceiver(this);
-			mContext.registerReceiver(mBroadCastReceiver, new IntentFilter(Intent.ACTION_CONFIGURATION_CHANGED));
-		}catch(Exception e) {
+			if (mBroadCastReceiver == null)
+				mBroadCastReceiver = new OrmmaConfigurationBroadcastReceiver(
+						this);
+			mContext.registerReceiver(mBroadCastReceiver, new IntentFilter(
+					Intent.ACTION_CONFIGURATION_CHANGED));
+		} catch (Exception e) {
 		}
 	}
 }

@@ -338,6 +338,7 @@ public class OrmmaView extends WebView implements OnGlobalLayoutListener {
 	public enum ViewState {
 		DEFAULT, RESIZED, EXPANDED, HIDDEN, LEFT_BEHIND, OPENED;
 	}
+
 	private static final String SdkLog_TAG = "OrmmaView";
 
 	// static for accessing xml attributes
@@ -463,6 +464,7 @@ public class OrmmaView extends WebView implements OnGlobalLayoutListener {
 	 * The webview client used for trapping certain events
 	 */
 	WebViewClient mWebViewClient = new WebViewClient() {
+		@Override
 		public void onLoadResource(WebView view, String url) {
 			SdkLog.d(SdkLog_TAG, "lr:" + url);
 		}
@@ -548,53 +550,62 @@ public class OrmmaView extends WebView implements OnGlobalLayoutListener {
 			SdkLog.d("OrmmaView", message);
 			return false;
 		}
-		
+
 		@Override
 		public void onShowCustomView(View view, CustomViewCallback callback) {
-		    super.onShowCustomView(view, callback);
-		    if (view instanceof FrameLayout){
-		        FrameLayout frame = (FrameLayout) view;
-		        if (frame.getFocusedChild() instanceof VideoView){
-		            VideoView video = (VideoView) frame.getFocusedChild();
-		            video.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-						
+			super.onShowCustomView(view, callback);
+			if (view instanceof FrameLayout) {
+				FrameLayout frame = (FrameLayout) view;
+				if (frame.getFocusedChild() instanceof VideoView) {
+					VideoView video = (VideoView) frame.getFocusedChild();
+					video.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+
 						@Override
 						public void onCompletion(MediaPlayer mp) {
 							SdkLog.i(SdkLog_TAG, "video complete ");
 						}
 					});
-		            video.setOnErrorListener(new MediaPlayer.OnErrorListener() {
-						
+					video.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+
 						@Override
-						public boolean onError(MediaPlayer mp, int what, int extra) {
-							SdkLog.e(SdkLog_TAG, "video error " + what + ", " + extra);
+						public boolean onError(MediaPlayer mp, int what,
+								int extra) {
+							SdkLog.e(SdkLog_TAG, "video error " + what + ", "
+									+ extra);
 							switch (what) {
 							case MediaPlayer.MEDIA_ERROR_IO:
-								SdkLog.w(SdkLog_TAG, "IO Error"); break;
+								SdkLog.w(SdkLog_TAG, "IO Error");
+								break;
 							case MediaPlayer.MEDIA_ERROR_MALFORMED:
-								SdkLog.w(SdkLog_TAG, "Malformed"); break;
+								SdkLog.w(SdkLog_TAG, "Malformed");
+								break;
 							case MediaPlayer.MEDIA_ERROR_NOT_VALID_FOR_PROGRESSIVE_PLAYBACK:
-								SdkLog.w(SdkLog_TAG, "Not valid for progressive"); break;
+								SdkLog.w(SdkLog_TAG,
+										"Not valid for progressive");
+								break;
 							case MediaPlayer.MEDIA_ERROR_SERVER_DIED:
-								SdkLog.w(SdkLog_TAG, "Server died"); break;
+								SdkLog.w(SdkLog_TAG, "Server died");
+								break;
 							case MediaPlayer.MEDIA_ERROR_TIMED_OUT:
-								SdkLog.w(SdkLog_TAG, "Timed Out"); break;
+								SdkLog.w(SdkLog_TAG, "Timed Out");
+								break;
 							case MediaPlayer.MEDIA_ERROR_UNKNOWN:
-								SdkLog.w(SdkLog_TAG, "Unknown"); break;
+								SdkLog.w(SdkLog_TAG, "Unknown");
+								break;
 							case MediaPlayer.MEDIA_ERROR_UNSUPPORTED:
-								SdkLog.w(SdkLog_TAG, "Unsupported"); break;								
+								SdkLog.w(SdkLog_TAG, "Unsupported");
+								break;
 							}
 							return false;
 						}
 					});
-		            video.start();
-		        }
-		    }
-		    else {
-		    	SdkLog.w(SdkLog_TAG, "onShowCustomView:: " + view);
-		    }
+					video.start();
+				}
+			} else {
+				SdkLog.w(SdkLog_TAG, "onShowCustomView:: " + view);
+			}
 		}
-				
+
 	};
 
 	/**
@@ -667,10 +678,10 @@ public class OrmmaView extends WebView implements OnGlobalLayoutListener {
 				android.R.id.content);
 
 		ViewGroup parent = (ViewGroup) getParent();
-		FrameLayout.LayoutParams fl = new FrameLayout.LayoutParams(
-				(int) (d.width), (int) (d.height));
-		fl.topMargin = (int) (d.x);
-		fl.leftMargin = (int) (d.y);
+		FrameLayout.LayoutParams fl = new FrameLayout.LayoutParams((d.width),
+				(d.height));
+		fl.topMargin = (d.x);
+		fl.leftMargin = (d.y);
 
 		int index = 0;
 		int count = parent.getChildCount();
@@ -682,8 +693,8 @@ public class OrmmaView extends WebView implements OnGlobalLayoutListener {
 		FrameLayout placeHolder = new FrameLayout(getContext());
 		placeHolder.setId(PLACEHOLDER_ID);
 
-		ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(
-				(int) mViewWidth, (int) mViewHeight);
+		ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(mViewWidth,
+				mViewHeight);
 
 		if (mScrollContainer == null && mFindScrollContainer) {
 			ViewGroup _p = parent;
@@ -716,10 +727,10 @@ public class OrmmaView extends WebView implements OnGlobalLayoutListener {
 		});
 
 		FrameLayout.LayoutParams bgfl = new FrameLayout.LayoutParams(
-				FrameLayout.LayoutParams.MATCH_PARENT,
-				FrameLayout.LayoutParams.WRAP_CONTENT);
+				android.view.ViewGroup.LayoutParams.MATCH_PARENT,
+				android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
 		backGround.setId(BACKGROUND_ID);
-		backGround.setPadding((int) (d.x), (int) (d.y), 0, 0);
+		backGround.setPadding((d.x), (d.y), 0, 0);
 		parent.removeView(OrmmaView.this);
 		backGround.addView(OrmmaView.this, fl);
 		contentView.addView(backGround, bgfl);
@@ -755,10 +766,10 @@ public class OrmmaView extends WebView implements OnGlobalLayoutListener {
 		String injection = "window.ormmaview.fireChangeEvent({ state: \'default\',"
 				+ " size: "
 				+ "{ width: "
-				+ (int) mViewWidth
+				+ mViewWidth
 				/ mDensity
 				+ ", "
-				+ "height: " + (int) mViewHeight / mDensity + "}" + "});";
+				+ "height: " + mViewHeight / mDensity + "}" + "});";
 		SdkLog.d(SdkLog_TAG, "closeExpanded: injection: " + injection);
 		injectJavaScript(injection);
 
@@ -794,10 +805,10 @@ public class OrmmaView extends WebView implements OnGlobalLayoutListener {
 		String injection = "window.ormmaview.fireChangeEvent({ state: \'default\',"
 				+ " size: "
 				+ "{ width: "
-				+ (int) mViewWidth
+				+ mViewWidth
 				/ mDensity
 				+ ", "
-				+ "height: " + (int) mViewHeight / mDensity + "}" + "});";
+				+ "height: " + mViewHeight / mDensity + "}" + "});";
 		SdkLog.d(SdkLog_TAG, "closeResized: injection: " + injection);
 		injectJavaScript(injection);
 		resetLayout();
@@ -853,7 +864,6 @@ public class OrmmaView extends WebView implements OnGlobalLayoutListener {
 	 * Dump.
 	 */
 	public void dump() {
-		// TODO Auto-generated method stub
 	}
 
 	/**
@@ -932,15 +942,15 @@ public class OrmmaView extends WebView implements OnGlobalLayoutListener {
 	/**
 	 * Initialize the view
 	 */
-	@SuppressWarnings("deprecation")
 	@SuppressLint({ "SetJavaScriptEnabled" })
 	private void initialize() {
 		SdkUtil.setContext(getContext());
 		if (!isInEditMode()) {
-			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) {
-				getSettings().setPluginState(WebSettings.PluginState.ON);
+			if (Build.VERSION.SDK_INT < 18) {
+				getSettings().setPluginState(WebSettings.PluginState.OFF);
 				getSettings().setAppCacheMaxSize(WEBVIEW_CACHE_SIZE);
 			}
+
 			getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
 			getSettings().setAppCacheEnabled(true);
 			getSettings().setUseWideViewPort(false);
@@ -984,9 +994,10 @@ public class OrmmaView extends WebView implements OnGlobalLayoutListener {
 	 * @param str
 	 *            the java script to inject
 	 */
-	public void injectJavaScript(String str) {
+
+	public void injectJavaScript(final String str) {
 		if (str != null) {
-			super.loadUrl("javascript:" + str);
+			SdkUtil.evaluateJavascript(this, str);
 		}
 	}
 
@@ -1043,7 +1054,7 @@ public class OrmmaView extends WebView implements OnGlobalLayoutListener {
 	public void loadData(String data, String type, String enc) {
 
 		String url;
-		
+
 		bPageFinished = false;
 		if (mTimeOutRunnable == null) {
 			mTimeOutRunnable = new TimeOutRunnable();
@@ -1060,8 +1071,9 @@ public class OrmmaView extends WebView implements OnGlobalLayoutListener {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
-		
+		} catch (Exception e2) {
+			super.loadData(data, type, enc);
+		} 
 	}
 
 	/**
@@ -1117,7 +1129,7 @@ public class OrmmaView extends WebView implements OnGlobalLayoutListener {
 		} finally {
 			if (is != null) {
 				try {
-					
+
 					is.close();
 				} catch (Exception e) {
 					// TODO: handle exception
@@ -1208,15 +1220,17 @@ public class OrmmaView extends WebView implements OnGlobalLayoutListener {
 
 	@Override
 	protected void onDetachedFromWindow() {
+		super.onDetachedFromWindow();
 		if (mLocalFilePath != null && mLocalFilePath.length() > 1) {
 			mUtilityController.deleteOldAds(mLocalFilePath);
 		}
 		mUtilityController.stopAllListeners();
+		stopLoading();
 	}
 
 	// trap keyboard state and view height/width
 
-
+	@Override
 	public void onGlobalLayout() {
 
 		boolean state = bKeyboardOut;
@@ -1323,7 +1337,6 @@ public class OrmmaView extends WebView implements OnGlobalLayoutListener {
 			}
 		} else {
 			// if not fullscreen, display map in current OrmmaView space
-			// TODO
 			if (mapAPIKey != null) {
 
 				try {
@@ -1335,7 +1348,6 @@ public class OrmmaView extends WebView implements OnGlobalLayoutListener {
 					 * mapView.setBuiltInZoomControls(true);
 					 */
 				} catch (Exception e) {
-					// TODO
 					e.printStackTrace();
 				}
 			} else {
@@ -1478,10 +1490,10 @@ public class OrmmaView extends WebView implements OnGlobalLayoutListener {
 		OrmmaPlayer videoPlayer = getPlayer();
 		videoPlayer.setPlayData(properties, url);
 
-		FrameLayout.LayoutParams fl = new FrameLayout.LayoutParams(
-				(int) (d.width), (int) (d.height));
-		fl.topMargin = (int) (d.x);
-		fl.leftMargin = (int) (d.y);
+		FrameLayout.LayoutParams fl = new FrameLayout.LayoutParams((d.width),
+				(d.height));
+		fl.topMargin = (d.x);
+		fl.leftMargin = (d.y);
 		videoPlayer.setLayoutParams(fl);
 
 		FrameLayout backGround = new FrameLayout(getContext());
@@ -1493,13 +1505,13 @@ public class OrmmaView extends WebView implements OnGlobalLayoutListener {
 			}
 		});
 		backGround.setId(BACKGROUND_ID);
-		backGround.setPadding((int) (d.x), (int) (d.y), 0, 0);
+		backGround.setPadding((d.x), (d.y), 0, 0);
 
 		FrameLayout contentView = (FrameLayout) getRootView().findViewById(
 				android.R.id.content);
 		contentView.addView(backGround, new FrameLayout.LayoutParams(
-				FrameLayout.LayoutParams.MATCH_PARENT,
-				FrameLayout.LayoutParams.MATCH_PARENT));
+				android.view.ViewGroup.LayoutParams.MATCH_PARENT,
+				android.view.ViewGroup.LayoutParams.MATCH_PARENT));
 
 		backGround.addView(videoPlayer);
 		setVisibility(View.INVISIBLE);
@@ -1727,11 +1739,11 @@ public class OrmmaView extends WebView implements OnGlobalLayoutListener {
 	public void show() {
 		mHandler.sendEmptyMessage(MESSAGE_SHOW);
 	}
-	
+
 	protected WebViewClient getWebViewClient() {
 		return mWebViewClient;
 	}
-	
+
 	@Override
 	public void dispatchWindowVisibilityChanged(int v) {
 		super.dispatchWindowVisibilityChanged(v);

@@ -31,14 +31,13 @@ import android.os.Bundle;
 import org.ormma.controller.OrmmaLocationController;
 
 /**
- * The listener interface for receiving location events.
- * The class that is interested in processing a loc
- * event implements this interface, and the object created
- * with that class is registered with a component using the
+ * The listener interface for receiving location events. The class that is
+ * interested in processing a loc event implements this interface, and the
+ * object created with that class is registered with a component using the
  * component's <code>addLocListener<code> method. When
  * the loc event occurs, that object's appropriate
  * method is invoked.
- *
+ * 
  * @see LocEvent
  */
 public class LocListener implements LocationListener {
@@ -47,7 +46,7 @@ public class LocListener implements LocationListener {
 	 * The m ormma location controller.
 	 */
 	OrmmaLocationController mOrmmaLocationController;
-	
+
 	/**
 	 * The m loc man.
 	 */
@@ -62,38 +61,57 @@ public class LocListener implements LocationListener {
 
 	/**
 	 * Instantiates a new loc listener.
-	 *
-	 * @param c the c
-	 * @param interval the interval
-	 * @param ormmaLocationController the ormma location controller
-	 * @param provider the provider
+	 * 
+	 * @param c
+	 *            the c
+	 * @param interval
+	 *            the interval
+	 * @param ormmaLocationController
+	 *            the ormma location controller
+	 * @param provider
+	 *            the provider
 	 */
-	public LocListener(Context c, int interval, OrmmaLocationController ormmaLocationController, String provider) {
+	public LocListener(Context c, int interval,
+			OrmmaLocationController ormmaLocationController, String provider) {
 		mOrmmaLocationController = ormmaLocationController;
-		mLocMan = (LocationManager) c.getSystemService(Context.LOCATION_SERVICE);
+		mLocMan = (LocationManager) c
+				.getSystemService(Context.LOCATION_SERVICE);
 		mProvider = provider;
 		// mInterval = interval;
 	}
 
-	/* (non-Javadoc)
-	 * @see android.location.LocationListener#onProviderDisabled(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * android.location.LocationListener#onProviderDisabled(java.lang.String)
 	 */
+	@Override
 	public void onProviderDisabled(String provider) {
 		mOrmmaLocationController.fail();
 	}
 
-	/* (non-Javadoc)
-	 * @see android.location.LocationListener#onStatusChanged(java.lang.String, int, android.os.Bundle)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.location.LocationListener#onStatusChanged(java.lang.String,
+	 * int, android.os.Bundle)
 	 */
+	@Override
 	public void onStatusChanged(String provider, int status, Bundle extras) {
 		if (status == 0 && !mOrmmaLocationController.hasLocation()) {
 			mOrmmaLocationController.fail();
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see android.location.LocationListener#onLocationChanged(android.location.Location)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * android.location.LocationListener#onLocationChanged(android.location.
+	 * Location)
 	 */
+	@Override
 	public void onLocationChanged(Location location) {
 		mOrmmaLocationController.success(location);
 	}
@@ -105,8 +123,11 @@ public class LocListener implements LocationListener {
 		mLocMan.removeUpdates(this);
 	}
 
-	/* (non-Javadoc)
-	 * @see android.location.LocationListener#onProviderEnabled(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * android.location.LocationListener#onProviderEnabled(java.lang.String)
 	 */
 	@Override
 	public void onProviderEnabled(String provider) {

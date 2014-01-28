@@ -12,66 +12,51 @@ import android.view.View;
 
 import com.MASTAdView.MASTAdLog;
 
-
-public class AdClickHandler implements View.OnClickListener
-{
+public class AdClickHandler implements View.OnClickListener {
 	final private AdViewContainer parentContainer;
 	final private MASTAdLog adLog;
 	final private AdData adData;
-	
+
 	private OpenUrlThread openUrlThread = null;
-	
-	
-	public AdClickHandler(AdViewContainer parent)
-	{
+
+	public AdClickHandler(AdViewContainer parent) {
 		parentContainer = parent;
 		adLog = parentContainer.getLog();
 		adData = null;
 	}
-	
-	
-	public AdClickHandler(AdViewContainer parent, AdData data)
-	{
+
+	public AdClickHandler(AdViewContainer parent, AdData data) {
 		parentContainer = parent;
 		adLog = parentContainer.getLog();
 		adData = data;
 	}
-	
-	
-	public void onClick(View v)
-	{
-		if ((adData != null) && (adData.clickUrl != null))
-		{
-			 openUrlForBrowsing(parentContainer.getContext(), adData.clickUrl);
-			
+
+	public void onClick(View v) {
+		if ((adData != null) && (adData.clickUrl != null)) {
+			openUrlForBrowsing(parentContainer.getContext(), adData.clickUrl);
+
 		}
 	}
-	
-	
-	public void openUrlForBrowsing(Context context, String url)
-	{
-		if (url==null) return;
-		
-		if ((openUrlThread==null) || (openUrlThread.getState().equals(Thread.State.TERMINATED)))
-		{
+
+	public void openUrlForBrowsing(Context context, String url) {
+		if (url == null)
+			return;
+
+		if ((openUrlThread == null)
+				|| (openUrlThread.getState().equals(Thread.State.TERMINATED))) {
 			openUrlThread = new OpenUrlThread(parentContainer.getContext(), url);
 			openUrlThread.start();
-		}
-		else if (openUrlThread.getState().equals(Thread.State.NEW))
-		{
+		} else if (openUrlThread.getState().equals(Thread.State.NEW)) {
 			openUrlThread.start();
 		}
 	}
-	
-	
-	private class OpenUrlThread extends Thread
-	{
+
+	private class OpenUrlThread extends Thread {
 		Context context;
 		String url;
-		
-		public OpenUrlThread(Context context, String url)
-		{
-			this.context =context;
+
+		public OpenUrlThread(Context context, String url) {
+			this.context = context;
 			this.url = url;
 		}
 
@@ -80,75 +65,68 @@ public class AdClickHandler implements View.OnClickListener
 			openUrlWorker(context, url);
 		}
 	}
-	
-	
-	private void openUrlWorker(final Context context, final String url)
-	{
+
+	private void openUrlWorker(final Context context, final String url) {
 		String lastUrl = null;
-		String newUrl =  url;
+		String newUrl = url;
 		URL connectURL;
-		
+
 		// Follow redirects to final resource location
-		while(!newUrl.equals(lastUrl))
-		{
+		while (!newUrl.equals(lastUrl)) {
 			lastUrl = newUrl;
-			try
-			{					
-				connectURL = new URL(newUrl);					
-				HttpURLConnection conn = (HttpURLConnection)connectURL.openConnection();
+			try {
+				connectURL = new URL(newUrl);
+				HttpURLConnection conn = (HttpURLConnection) connectURL
+						.openConnection();
 				newUrl = conn.getHeaderField("Location");
-				if (newUrl==null) 
-				{
-					newUrl=conn.getURL().toString();
+				if (newUrl == null) {
+					newUrl = conn.getURL().toString();
 				}
-			}
-			catch (Exception e)
-			{
+			} catch (Exception e) {
 				newUrl = lastUrl;
-			}				
+			}
 		}
-			
-		
+
 		Uri uri = Uri.parse(newUrl);
-		if (parentContainer.getUseInternalBrowser() && (uri.getScheme().equals("http") || uri.getScheme().equals("https")))
-		{
-//			parentContainer.getHandler().post(new Runnable()
-//			{			
-//				@Override
-//				public void run()
-//				{
-//					try
-//					{
-//						new InternalBrowser(context, url).show();
-//					}
-//					catch (Exception e)
-//					{
-//						adLog.log(MASTAdLog.LOG_LEVEL_ERROR, "openUrlInInternalBrowser", e.getMessage());
-//					}
-//				}
-//			});
+		if (parentContainer.getUseInternalBrowser()
+				&& (uri.getScheme().equals("http") || uri.getScheme().equals(
+						"https"))) {
+			// parentContainer.getHandler().post(new Runnable()
+			// {
+			// @Override
+			// public void run()
+			// {
+			// try
+			// {
+			// new InternalBrowser(context, url).show();
+			// }
+			// catch (Exception e)
+			// {
+			// adLog.log(MASTAdLog.LOG_LEVEL_ERROR, "openUrlInInternalBrowser",
+			// e.getMessage());
+			// }
+			// }
+			// });
 			Intent i = new Intent(parentContainer.getContext(), Browser.class);
-			//SdkLog.d(SdkLog_TAG, "open:" + url);
+			// SdkLog.d(SdkLog_TAG, "open:" + url);
 			i.putExtra(Browser.URL_EXTRA, newUrl);
 			i.putExtra(Browser.SHOW_BACK_EXTRA, true);
 			i.putExtra(Browser.SHOW_FORWARD_EXTRA, true);
 			i.putExtra(Browser.SHOW_REFRESH_EXTRA, true);
 			i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-			parentContainer.getContext().startActivity(i);			
-		}
-		else
-		{
-			try
-			{
-				Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(newUrl));
+			parentContainer.getContext().startActivity(i);
+		} else {
+			try {
+				Intent intent = new Intent(Intent.ACTION_VIEW,
+						Uri.parse(newUrl));
 				context.startActivity(intent);
+			} catch (Exception e) {
+				adLog.log(MASTAdLog.LOG_LEVEL_ERROR,
+						"openUrlInExternalBrowser", "url=" + newUrl
+								+ "; error=" + e.getMessage());
 			}
-			catch (Exception e)
-			{
-				adLog.log(MASTAdLog.LOG_LEVEL_ERROR, "openUrlInExternalBrowser","url="+ newUrl+"; error="+e.getMessage());
-			}
-		}		
+		}
 	}
 
 }

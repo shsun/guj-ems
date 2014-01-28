@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<!-- Set this to true if you want the geolocation truncated to two digits -->
+    <bool name="ems_shorten_location">false</bool>
+
+    <!--  Set this to true if you want test ads in all adviews -->
+	<bool name="ems_test_mode">false</bool>
+	
+	<!-- the maximum age of a location available to the app for advertising (only applies if ems_geo is true)-->
+	<item format="integer" name="ems_location_maxage_ms" type="integer">7200000</item>
+
+</resources>

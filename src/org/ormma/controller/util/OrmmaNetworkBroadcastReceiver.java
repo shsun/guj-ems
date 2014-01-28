@@ -23,15 +23,20 @@ public class OrmmaNetworkBroadcastReceiver extends BroadcastReceiver {
 
 	/**
 	 * Instantiates a new ormma network broadcast receiver.
-	 *
-	 * @param ormmaNetworkController the ormma network controller
+	 * 
+	 * @param ormmaNetworkController
+	 *            the ormma network controller
 	 */
-	public OrmmaNetworkBroadcastReceiver(OrmmaNetworkController ormmaNetworkController) {
+	public OrmmaNetworkBroadcastReceiver(
+			OrmmaNetworkController ormmaNetworkController) {
 		mOrmmaNetworkController = ormmaNetworkController;
 	}
 
-	/* (non-Javadoc)
-	 * @see android.content.BroadcastReceiver#onReceive(android.content.Context, android.content.Intent)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.content.BroadcastReceiver#onReceive(android.content.Context,
+	 * android.content.Intent)
 	 */
 	@Override
 	public void onReceive(Context context, Intent intent) {

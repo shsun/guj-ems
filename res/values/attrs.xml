@@ -1,21 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+     <!-- custom attributes for ad views -->
+     <attr name="ems_onAdSuccess" format="string" />
+     <attr name="ems_onAdEmpty" format="string" />
+     <attr name="ems_onAdError" format="string" />
+     <attr name="ems_siteId" format="string" />
+     <attr name="ems_zoneId" format="string" />
+     <attr name="ems_bfSiteId" format="string"/>
+     <attr name="ems_bfZoneId" format="string"/>
+     <attr name="ems_uid" format="boolean" />
+     <attr name="ems_kw" format="boolean" />
+     <attr name="ems_nkw" format="boolean" />
+     <attr name="ems_geo" format="boolean" />
+     <attr name="ems_lat" format="float" />
+     <attr name="ems_lon" format="float" />
 
-    <declare-styleable name="GuJEMSAdView">
-        <attr name="ems_onAdSuccess" format="string" />
-        <attr name="ems_onAdEmpty" format="string" />
-        <attr name="ems_onAdError" format="string" />
-        <attr name="ems_siteId" format="string" />
-        <attr name="ems_zoneId" format="string" />
-        <attr name="ems_bfSiteId" format="string"/>
-        <attr name="ems_bfZoneId" format="string"/>
-        <attr name="ems_uid" format="boolean" />
-        <attr name="ems_kw" format="boolean" />
-        <attr name="ems_nkw" format="boolean" />
-        <attr name="ems_geo" format="boolean" />
-        <attr name="ems_lat" format="float" />
-        <attr name="ems_lon" format="float" />
-        <attr name="ems_debug" format="boolean" />
+     <!-- attribute usage for default web view -->
+     <declare-styleable name="GuJEMSAdView">
+        <attr name="ems_onAdSuccess"/>
+        <attr name="ems_onAdEmpty"/>
+        <attr name="ems_onAdError"/>
+        <attr name="ems_siteId"/>
+        <attr name="ems_zoneId"/>
+        <attr name="ems_bfSiteId"/>
+        <attr name="ems_bfZoneId"/>
+        <attr name="ems_uid"/>
+        <attr name="ems_kw"/>
+        <attr name="ems_nkw"/>
+        <attr name="ems_geo" />
+        <attr name="ems_lat"/>
+        <attr name="ems_lon"/>
     </declare-styleable>
+    
+    <!-- attribute usage for native view -->
+    <declare-styleable name="GuJEMSNativeAdView">
+        <attr name="ems_onAdSuccess"/>
+        <attr name="ems_onAdEmpty"/>
+        <attr name="ems_onAdError"/>
+        <attr name="ems_siteId"/>
+        <attr name="ems_zoneId"/>
+        <attr name="ems_bfSiteId"/>
+        <attr name="ems_bfZoneId"/>
+        <attr name="ems_uid"/>
+        <attr name="ems_kw"/>
+        <attr name="ems_nkw"/>
+        <attr name="ems_geo" />
+        <attr name="ems_lat"/>
+        <attr name="ems_lon"/>
+    </declare-styleable>    
 
 </resources>

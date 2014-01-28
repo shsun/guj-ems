@@ -6,7 +6,6 @@
  *  be found in the AUTHORS file in the root of the source tree.
  */
 
-
 package org.ormma.controller.util;
 
 import org.ormma.controller.OrmmaController.PlayerProperties;
@@ -30,10 +29,11 @@ import de.guj.ems.mobile.sdk.util.SdkLog;
 /**
  * 
  * Player class to play audio and video
- *
+ * 
  */
 
-public class OrmmaPlayer extends VideoView implements OnCompletionListener, OnErrorListener, OnPreparedListener {
+public class OrmmaPlayer extends VideoView implements OnCompletionListener,
+		OnErrorListener, OnPreparedListener {
 
 	private PlayerProperties playProperties;
 	private AudioManager aManager;
@@ -41,26 +41,31 @@ public class OrmmaPlayer extends VideoView implements OnCompletionListener, OnEr
 	private int mutedVolume;
 	private String contentURL;
 	private RelativeLayout transientLayout;
-	
-	private static String transientText = "Lodt... Bitte warten..";
+
+	private static String transientText = "L�dt... Bitte warten..";
 	private static String SdkLog_TAG = "Ormma Player";
 	private boolean isReleased;
-			
+
 	/**
 	 * Constructor
-	 * @param context - Current context	 * 
+	 * 
+	 * @param context
+	 *            - Current context *
 	 */
-	public OrmmaPlayer(Context context){
+	public OrmmaPlayer(Context context) {
 		super(context);
-		aManager = (AudioManager) getContext().getSystemService(Context.AUDIO_SERVICE);		
+		aManager = (AudioManager) getContext().getSystemService(
+				Context.AUDIO_SERVICE);
 	}
-	
+
 	/**
 	 * 
-	 * @param properties - player properties
-	 * @param url - url to play
+	 * @param properties
+	 *            - player properties
+	 * @param url
+	 *            - url to play
 	 */
-	public void setPlayData(PlayerProperties properties,String url){
+	public void setPlayData(PlayerProperties properties, String url) {
 		isReleased = false;
 		playProperties = properties;
 		contentURL = url;
@@ -68,7 +73,9 @@ public class OrmmaPlayer extends VideoView implements OnCompletionListener, OnEr
 
 	/**
 	 * Play audio
-	 * @param url - audio url
+	 * 
+	 * @param url
+	 *            - audio url
 	 */
 	public void playAudio() {
 		loadContent();
@@ -78,31 +85,32 @@ public class OrmmaPlayer extends VideoView implements OnCompletionListener, OnEr
 	 * Show player control
 	 */
 	void displayControl() {
-		
+
 		if (playProperties.showControl()) {
 			MediaController ctrl = new MediaController(getContext());
 			setMediaController(ctrl);
 			ctrl.setAnchorView(this);
 		}
-			
+
 	}
-	
+
 	/**
 	 * Load audio/video content
-	 * @param url - audio/video url
+	 * 
+	 * @param url
+	 *            - audio/video url
 	 */
-	void loadContent(){
-		
-		
+	void loadContent() {
+
 		contentURL = contentURL.trim();
-		
+
 		contentURL = OrmmaUtils.convert(contentURL);
-		if(contentURL == null && listener != null){
+		if (contentURL == null && listener != null) {
 			removeView();
 			listener.onError();
 			return;
 		}
-		
+
 		setVideoURI(Uri.parse(contentURL));
 		displayControl();
 		startContent();
@@ -112,29 +120,32 @@ public class OrmmaPlayer extends VideoView implements OnCompletionListener, OnEr
 	 * Play start
 	 */
 	void startContent() {
-		
+
 		setOnCompletionListener(this);
 		setOnErrorListener(this);
-		setOnPreparedListener(this);		
-		
-		if(!playProperties.inline)
+		setOnPreparedListener(this);
+
+		if (!playProperties.inline)
 			addTransientMessage();
-		
+
 		if (playProperties.isAutoPlay()) {
 			start();
-		}		
+		}
 	}
 
 	/**
 	 * Play video
-	 * @param url - video url
+	 * 
+	 * @param url
+	 *            - video url
 	 */
-	public void playVideo() {	
-		
+	public void playVideo() {
+
 		if (playProperties.doMute()) {
 			mutedVolume = aManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-			aManager.setStreamVolume(AudioManager.STREAM_MUSIC, 0, AudioManager.FLAG_PLAY_SOUND);
-			
+			aManager.setStreamVolume(AudioManager.STREAM_MUSIC, 0,
+					AudioManager.FLAG_PLAY_SOUND);
+
 		}
 		loadContent();
 	}
@@ -143,12 +154,15 @@ public class OrmmaPlayer extends VideoView implements OnCompletionListener, OnEr
 	 * Unmute audio
 	 */
 	void unMute() {
-		aManager.setStreamVolume(AudioManager.STREAM_MUSIC, mutedVolume, AudioManager.FLAG_PLAY_SOUND);
+		aManager.setStreamVolume(AudioManager.STREAM_MUSIC, mutedVolume,
+				AudioManager.FLAG_PLAY_SOUND);
 	}
 
 	/**
 	 * Set callback listener
-	 * @param listener - callback listener
+	 * 
+	 * @param listener
+	 *            - callback listener
 	 */
 	public void setListener(OrmmaPlayerListener listener) {
 		this.listener = listener;
@@ -158,18 +172,18 @@ public class OrmmaPlayer extends VideoView implements OnCompletionListener, OnEr
 	public void onCompletion(MediaPlayer mp) {
 		if (playProperties.doLoop())
 			start();
-		else if (playProperties.exitOnComplete() || playProperties.inline) {	
+		else if (playProperties.exitOnComplete() || playProperties.inline) {
 			// for inline audio on completion, release player
 			releasePlayer();
 		}
 	}
-	
+
 	@Override
 	public boolean onError(MediaPlayer mp, int what, int extra) {
 		SdkLog.e(SdkLog_TAG, "Player error : " + what);
 		clearTransientMessage();
 		removeView();
-		if(listener != null)
+		if (listener != null)
 			listener.onError();
 		return false;
 	}
@@ -177,29 +191,29 @@ public class OrmmaPlayer extends VideoView implements OnCompletionListener, OnEr
 	@Override
 	public void onPrepared(MediaPlayer mp) {
 		clearTransientMessage();
-		if(listener != null)
+		if (listener != null)
 			listener.onPrepared();
-		}		
+	}
 
 	/**
 	 * Remove player from parent
 	 */
-	void removeView(){
+	void removeView() {
 		ViewGroup parent = (ViewGroup) getParent();
-		if(parent != null)
+		if (parent != null)
 			parent.removeView(this);
-	}	
-	
+	}
+
 	/**
 	 * Release player session, notify the listener
 	 */
-	public void releasePlayer(){
-		
-		if(isReleased)
+	public void releasePlayer() {
+
+		if (isReleased)
 			return;
-		
+
 		isReleased = true;
-		
+
 		stopPlayback();
 		removeView();
 		if (playProperties != null && playProperties.doMute())
@@ -207,41 +221,40 @@ public class OrmmaPlayer extends VideoView implements OnCompletionListener, OnEr
 		if (listener != null)
 			listener.onComplete();
 	}
-	
+
 	/**
 	 * Add transient message
 	 */
-	void addTransientMessage(){
-		
-		if(playProperties.inline)
+	void addTransientMessage() {
+
+		if (playProperties.inline)
 			return;
-		
+
 		transientLayout = new RelativeLayout(getContext());
 		transientLayout.setLayoutParams(getLayoutParams());
-		
-		//create a transient text view
+
+		// create a transient text view
 		TextView transientView = new TextView(getContext());
 		transientView.setText(transientText);
 		transientView.setTextColor(Color.WHITE);
-		
-		RelativeLayout.LayoutParams msgparams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+
+		RelativeLayout.LayoutParams msgparams = new RelativeLayout.LayoutParams(
+				LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		msgparams.addRule(RelativeLayout.CENTER_IN_PARENT);
-		
-		transientLayout.addView(transientView,msgparams);	
+
+		transientLayout.addView(transientView, msgparams);
 		ViewGroup parent = (ViewGroup) getParent();
 		parent.addView(transientLayout);
 	}
-	
+
 	/**
 	 * Clear transient message
 	 */
-	void clearTransientMessage(){
-		if(transientLayout != null) {
+	void clearTransientMessage() {
+		if (transientLayout != null) {
 			ViewGroup parent = (ViewGroup) getParent();
 			parent.removeView(transientLayout);
-		}		
-	}	
-	
-	
-	
+		}
+	}
+
 }

@@ -1,4 +1,5 @@
 <resources>
+	<string name="loading">Lädt&#8230;</string>
 	<string name="close">Schliessen</string>
 	<string name="sound">Sound an/aus</string>
     <string name="siteId">siteId</string>
@@ -22,9 +23,11 @@
     <string name="onAdSuccess">onAdSuccess</string>
     <string name="onAdEmpty">onAdEmpty</string>
     <string name="onAdError">onAdError</string>
+    <string name="videoSkip">-w- Abbrechbar in # Sekunden</string>
     <string name="videoPreload">-w- Bitte einen Moment Geduld&#8230;</string>
     <string name="videoRunning">-w- Klick auf Video öffnet Website</string>
     <string name="connectAd"><![CDATA[<!-- <connectad>yes</connectad> -->]]></string>
     <string name="bLevelParam">pbl</string>
     <string name="pStatusParam">psx</string>
+    <string name="securityHeaderName">Amobee-Account-ID</string>
 </resources>

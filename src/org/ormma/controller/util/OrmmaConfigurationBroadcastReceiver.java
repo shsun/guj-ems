@@ -19,7 +19,7 @@ import org.ormma.controller.OrmmaDisplayController;
 public class OrmmaConfigurationBroadcastReceiver extends BroadcastReceiver {
 
 	private OrmmaDisplayController mOrmmaDisplayController;
-	
+
 	/**
 	 * The m last orientation.
 	 */
@@ -27,16 +27,21 @@ public class OrmmaConfigurationBroadcastReceiver extends BroadcastReceiver {
 
 	/**
 	 * Instantiates a new ormma configuration broadcast receiver.
-	 *
-	 * @param ormmaDisplayController the ormma display controller
+	 * 
+	 * @param ormmaDisplayController
+	 *            the ormma display controller
 	 */
-	public OrmmaConfigurationBroadcastReceiver(OrmmaDisplayController ormmaDisplayController) {
+	public OrmmaConfigurationBroadcastReceiver(
+			OrmmaDisplayController ormmaDisplayController) {
 		mOrmmaDisplayController = ormmaDisplayController;
 		mLastOrientation = mOrmmaDisplayController.getOrientation();
 	}
 
-	/* (non-Javadoc)
-	 * @see android.content.BroadcastReceiver#onReceive(android.content.Context, android.content.Intent)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.content.BroadcastReceiver#onReceive(android.content.Context,
+	 * android.content.Intent)
 	 */
 	@Override
 	public void onReceive(Context context, Intent intent) {

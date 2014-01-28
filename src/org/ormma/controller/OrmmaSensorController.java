@@ -15,7 +15,7 @@ import android.webkit.JavascriptInterface;
 import de.guj.ems.mobile.sdk.util.SdkLog;
 
 /**
- * The Class OrmmaSensorController.  OrmmaController for interacting with sensors
+ * The Class OrmmaSensorController. OrmmaController for interacting with sensors
  */
 public class OrmmaSensorController extends OrmmaController {
 	private static final String SdkLog_TAG = "OrmmaSensorController";
@@ -27,9 +27,11 @@ public class OrmmaSensorController extends OrmmaController {
 
 	/**
 	 * Instantiates a new ormma sensor controller.
-	 *
-	 * @param adView the ad view
-	 * @param context the context
+	 * 
+	 * @param adView
+	 *            the ad view
+	 * @param context
+	 *            the context
 	 */
 	public OrmmaSensorController(OrmmaView adView, Context context) {
 		super(adView, context);
@@ -101,47 +103,54 @@ public class OrmmaSensorController extends OrmmaController {
 
 	/**
 	 * On tilt.
-	 *
-	 * @param x the x
-	 * @param y the y
-	 * @param z the z
+	 * 
+	 * @param x
+	 *            the x
+	 * @param y
+	 *            the y
+	 * @param z
+	 *            the z
 	 */
 	public void onTilt(float x, float y, float z) {
 		mLastX = x;
 		mLastY = y;
 		mLastZ = z;
-		
-		String script = "window.ormmaview.fireChangeEvent({ tilt: "+ getTilt() + "})";
-		SdkLog.d(SdkLog_TAG, script );
+
+		String script = "window.ormmaview.fireChangeEvent({ tilt: " + getTilt()
+				+ "})";
+		SdkLog.d(SdkLog_TAG, script);
 		mOrmmaView.injectJavaScript(script);
 	}
 
 	/**
 	 * Gets the tilt.
-	 *
+	 * 
 	 * @return the tilt
 	 */
 	@JavascriptInterface
 	public String getTilt() {
-		String tilt = "{ x : \"" + mLastX + "\", y : \"" + mLastY + "\", z : \"" + mLastZ + "\"}";
+		String tilt = "{ x : \"" + mLastX + "\", y : \"" + mLastY
+				+ "\", z : \"" + mLastZ + "\"}";
 		SdkLog.d(SdkLog_TAG, "getTilt: " + tilt);
 		return tilt;
 	}
 
 	/**
 	 * On heading change.
-	 *
-	 * @param f the f
+	 * 
+	 * @param f
+	 *            the f
 	 */
 	public void onHeadingChange(float f) {
-		String script = "window.ormmaview.fireChangeEvent({ heading: " + (int) (f * (180 / Math.PI)) + "});";
-		SdkLog.d(SdkLog_TAG, script );
+		String script = "window.ormmaview.fireChangeEvent({ heading: "
+				+ (int) (f * (180 / Math.PI)) + "});";
+		SdkLog.d(SdkLog_TAG, script);
 		mOrmmaView.injectJavaScript(script);
 	}
 
 	/**
 	 * Gets the heading.
-	 *
+	 * 
 	 * @return the heading
 	 */
 	@JavascriptInterface
@@ -150,7 +159,9 @@ public class OrmmaSensorController extends OrmmaController {
 		return mAccel.getHeading();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ormma.controller.OrmmaController#stopAllListeners()
 	 */
 	@Override

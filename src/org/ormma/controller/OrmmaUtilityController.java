@@ -59,9 +59,12 @@ public class OrmmaUtilityController extends OrmmaController {
 	// android calendar handling projection array
 	@SuppressLint("InlinedApi")
 	private static final String[] EVENT_PROJECTION = new String[] {
-			Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH ? Calendars._ID : "0", // 0
-			Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH ? Calendars.ACCOUNT_NAME : "1", // 1
-			Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH ? Calendars.CALENDAR_DISPLAY_NAME : "2" };
+			Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH ? Calendars._ID
+					: "0", // 0
+			Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH ? Calendars.ACCOUNT_NAME
+					: "1", // 1
+			Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH ? Calendars.CALENDAR_DISPLAY_NAME
+					: "2" };
 
 	// android calendar handling content provider uris below API 14
 	private final static Uri CALENDAR_PROVIDER_URI = Build.VERSION.SDK_INT >= 8 ? Uri
@@ -207,7 +210,8 @@ public class OrmmaUtilityController extends OrmmaController {
 	 */
 	@JavascriptInterface
 	public void sendSMS(String recipient, String body) {
-		SdkLog.d(SdkLog_TAG, "sendSMS: recipient: " + recipient + " body: " + body);
+		SdkLog.d(SdkLog_TAG, "sendSMS: recipient: " + recipient + " body: "
+				+ body);
 		Intent sendIntent = new Intent(Intent.ACTION_VIEW);
 		sendIntent.putExtra("address", recipient);
 		sendIntent.putExtra("sms_body", body);
@@ -239,7 +243,7 @@ public class OrmmaUtilityController extends OrmmaController {
 		i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		mContext.startActivity(i);
 	}
-	
+
 	@JavascriptInterface
 	public void storePicture(String url) {
 		mAssetController.storePicture(url);
@@ -323,8 +327,9 @@ public class OrmmaUtilityController extends OrmmaController {
 				builder.setTitle("Auswahl Kalender:");
 				ListAdapter adapter = new SimpleAdapter(mContext, entries,
 						android.R.layout.two_line_list_item, new String[] {
-								"NAME", "EMAILID" }, new int[] { android.R.id.text1, android.R.id.text2 });
-				
+								"NAME", "EMAILID" }, new int[] {
+								android.R.id.text1, android.R.id.text2 });
+
 				builder.setSingleChoiceItems(adapter, -1,
 						new DialogInterface.OnClickListener() {
 							@Override
@@ -346,7 +351,8 @@ public class OrmmaUtilityController extends OrmmaController {
 				cursor.close();
 			}
 		} catch (Exception e) {
-			SdkLog.e(SdkLog_TAG, "Fehler beim Erzeugen des Kalendereintrags.", e);
+			SdkLog.e(SdkLog_TAG, "Fehler beim Erzeugen des Kalendereintrags.",
+					e);
 		}
 	}
 
@@ -387,19 +393,20 @@ public class OrmmaUtilityController extends OrmmaController {
 				values.put(Reminders.EVENT_ID, id);
 				values.put(Reminders.METHOD, Reminders.METHOD_ALERT);
 				values.put(Reminders.MINUTES, 15); // 15 minutes
-				cr.insert(
-						Build.VERSION.SDK_INT >= 14 ? Reminders.CONTENT_URI
-								: REMINDERS_PROVIDER_URI, values);
-	
-				Toast.makeText(mContext, "Danke! Termin mit Erinnerung in Kalender eingetragen.",
+				cr.insert(Build.VERSION.SDK_INT >= 14 ? Reminders.CONTENT_URI
+						: REMINDERS_PROVIDER_URI, values);
+
+				Toast.makeText(
+						mContext,
+						"Danke! Termin mit Erinnerung in Kalender eingetragen.",
 						Toast.LENGTH_SHORT).show();
-	
+
 			} else {
-				Toast.makeText(mContext, "Der Termin konnte leider nicht eingetragen werden.",
+				Toast.makeText(mContext,
+						"Der Termin konnte leider nicht eingetragen werden.",
 						Toast.LENGTH_SHORT).show();
 			}
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			SdkLog.e(SdkLog_TAG, "Error inserting event in to calendar.", e);
 		}
 	}
@@ -544,7 +551,7 @@ public class OrmmaUtilityController extends OrmmaController {
 	public void deleteOldAds() {
 		mAssetController.deleteOldAds();
 	}
-	
+
 	/**
 	 * Delete old ad.
 	 */
@@ -574,12 +581,12 @@ public class OrmmaUtilityController extends OrmmaController {
 	public void showAlert(final String message) {
 		SdkLog.e(SdkLog_TAG, message);
 	}
-	
+
 	@JavascriptInterface
 	public void addAsset(String url, String alias) {
 		mAssetController.addAsset(url, alias);
 	}
-	
+
 	@JavascriptInterface
 	public void removeAsset(String alias) {
 		mAssetController.removeAsset(alias);

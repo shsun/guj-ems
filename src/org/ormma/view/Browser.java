@@ -14,8 +14,9 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Gravity;
+import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.webkit.CookieSyncManager;
 import android.webkit.WebChromeClient;
@@ -27,7 +28,6 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 import de.guj.ems.mobile.sdk.R;
 
-// TODO: Auto-generated Javadoc
 /**
  * Activity for implementing Ormma open calls. Configurable via the following
  * extras: URL_EXTRA String : url to load SHOW_BACK_EXTRA boolean (default
@@ -44,7 +44,6 @@ public class Browser extends Activity {
 	public static final String SHOW_BACK_EXTRA = "open_show_back";
 	public static final String SHOW_FORWARD_EXTRA = "open_show_forward";
 	public static final String SHOW_REFRESH_EXTRA = "open_show_refresh";
-	
 
 	/** Layout Id constants. */
 	private static final int ButtonId = 100;
@@ -61,8 +60,8 @@ public class Browser extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-				// Build the layout
+
+		// Build the layout
 		RelativeLayout rl = new RelativeLayout(Browser.this);
 		WebView webview = new WebView(Browser.this);
 
@@ -71,41 +70,39 @@ public class Browser extends Activity {
 				Window.PROGRESS_VISIBILITY_ON);
 
 		getTheme().setTo(getApplicationContext().getTheme());
-		
+
 		Intent i = getIntent();
-		
+
 		// Build the button bar
 		LinearLayout bll = new LinearLayout(this);
 		bll.setOrientation(LinearLayout.HORIZONTAL);
 		bll.setId(ButtonId);
 		bll.setWeightSum(100);
 		RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
-				RelativeLayout.LayoutParams.MATCH_PARENT,
-				RelativeLayout.LayoutParams.MATCH_PARENT);
+				LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		lp.addRule(RelativeLayout.ABOVE, ButtonId);
 		rl.addView(webview, lp);
 
-		lp = new RelativeLayout.LayoutParams(
-				RelativeLayout.LayoutParams.MATCH_PARENT,
-				RelativeLayout.LayoutParams.WRAP_CONTENT);
+		lp = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT,
+				LayoutParams.WRAP_CONTENT);
 		lp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
 		rl.addView(bll, lp);
 
 		LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(
-				RelativeLayout.LayoutParams.WRAP_CONTENT,
-				RelativeLayout.LayoutParams.MATCH_PARENT);
+				LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
 		lp2.weight = 25;
 		lp2.gravity = Gravity.CENTER_VERTICAL;
 
 		ImageButton backButton = new ImageButton(Browser.this);
-		backButton.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+		backButton.setBackgroundColor(getResources().getColor(
+				android.R.color.transparent));
 		backButton.setId(BackwardId);
 
 		bll.addView(backButton, lp2);
 		if (!i.getBooleanExtra(SHOW_BACK_EXTRA, true))
 
-			backButton.setVisibility(ViewGroup.GONE);
-		
+			backButton.setVisibility(View.GONE);
+
 		backButton.setImageResource(R.drawable.leftarrow);
 		backButton.setOnClickListener(new OnClickListener() {
 
@@ -120,17 +117,17 @@ public class Browser extends Activity {
 		});
 
 		ImageButton forwardButton = new ImageButton(Browser.this);
-		forwardButton.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+		forwardButton.setBackgroundColor(getResources().getColor(
+				android.R.color.transparent));
 		forwardButton.setId(ForwardId);
-		lp2 = new LinearLayout.LayoutParams(
-				RelativeLayout.LayoutParams.WRAP_CONTENT,
-				RelativeLayout.LayoutParams.MATCH_PARENT);
+		lp2 = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
+				LayoutParams.MATCH_PARENT);
 		lp2.weight = 25;
 		lp2.gravity = Gravity.CENTER_VERTICAL;
 
 		bll.addView(forwardButton, lp2);
 		if (!i.getBooleanExtra(SHOW_FORWARD_EXTRA, true))
-			forwardButton.setVisibility(ViewGroup.GONE);
+			forwardButton.setVisibility(View.GONE);
 		forwardButton.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -141,19 +138,19 @@ public class Browser extends Activity {
 		});
 
 		ImageButton refreshButton = new ImageButton(Browser.this);
-		
+
 		refreshButton.setImageResource(R.drawable.refresh);
-		refreshButton.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-		lp2 = new LinearLayout.LayoutParams(
-				RelativeLayout.LayoutParams.WRAP_CONTENT,
-				RelativeLayout.LayoutParams.WRAP_CONTENT);
+		refreshButton.setBackgroundColor(getResources().getColor(
+				android.R.color.transparent));
+		lp2 = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
+				LayoutParams.WRAP_CONTENT);
 		lp2.weight = 25;
 		lp2.gravity = Gravity.CENTER_VERTICAL;
 
 		bll.addView(refreshButton, lp2);
 		if (!i.getBooleanExtra(SHOW_REFRESH_EXTRA, true))
 
-			refreshButton.setVisibility(ViewGroup.GONE);
+			refreshButton.setVisibility(View.GONE);
 		refreshButton.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -164,12 +161,12 @@ public class Browser extends Activity {
 		});
 
 		ImageButton closeButton = new ImageButton(Browser.this);
-		
+
 		closeButton.setImageResource(R.drawable.close);
-		closeButton.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-		lp2 = new LinearLayout.LayoutParams(
-				RelativeLayout.LayoutParams.WRAP_CONTENT,
-				RelativeLayout.LayoutParams.WRAP_CONTENT);
+		closeButton.setBackgroundColor(getResources().getColor(
+				android.R.color.transparent));
+		lp2 = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
+				LayoutParams.WRAP_CONTENT);
 		lp2.weight = 25;
 		lp2.gravity = Gravity.CENTER_VERTICAL;
 
@@ -193,6 +190,7 @@ public class Browser extends Activity {
 		webview.setId(WebViewId);
 
 		webview.setWebViewClient(new WebViewClient() {
+			@Override
 			public void onReceivedError(WebView view, int errorCode,
 					String description, String failingUrl) {
 				Activity a = (Activity) view.getContext();
@@ -205,16 +203,16 @@ public class Browser extends Activity {
 				Uri uri = Uri.parse(url);
 				try {
 					if (url.startsWith("tel:")) {
-						Intent intent = new Intent(Intent.ACTION_DIAL,
-								Uri.parse(url));
+						Intent intent = new Intent(Intent.ACTION_DIAL, Uri
+								.parse(url));
 						intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 						startActivity(intent);
 						return true;
 					}
 
 					if (url.startsWith("mailto:")) {
-						Intent intent = new Intent(Intent.ACTION_VIEW,
-								Uri.parse(url));
+						Intent intent = new Intent(Intent.ACTION_VIEW, Uri
+								.parse(url));
 						intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 						startActivity(intent);
 						return true;
@@ -250,8 +248,9 @@ public class Browser extends Activity {
 			@Override
 			public void onPageStarted(WebView view, String url, Bitmap favicon) {
 				super.onPageStarted(view, url, favicon);
-//				ImageButton forwardButton = (ImageButton) findViewById(ForwardId);
-//				forwardButton.setImageResource(R.drawable.unrightarrow);
+				// ImageButton forwardButton = (ImageButton)
+				// findViewById(ForwardId);
+				// forwardButton.setImageResource(R.drawable.unrightarrow);
 			}
 
 			@Override
@@ -262,9 +261,8 @@ public class Browser extends Activity {
 				// grey out buttons when appropriate
 				if (view.canGoForward()) {
 					forwardButton.setImageResource(R.drawable.rightarrow);
-				}
-				else {
-					forwardButton.setImageResource(0);					
+				} else {
+					forwardButton.setImageResource(0);
 				}
 
 			}
@@ -272,19 +270,20 @@ public class Browser extends Activity {
 		setContentView(rl);
 
 		webview.setWebChromeClient(new WebChromeClient() {
-			
+
 			private String orgTitle = null;
-			
+
+			@Override
 			public void onProgressChanged(WebView view, int progress) {
 				// show progress bar while loading, url when loaded
 				Activity a = (Activity) view.getContext();
 				if (orgTitle == null) {
 					orgTitle = a.getTitle().toString();
 				}
-				a.setTitle("Lädt...");
+				a.setTitle(R.string.loading);
 				a.setProgress(progress * 100);
 				if (progress == 100) {
-					//TODO layout / title / image?
+					// TODO Browser: custom layout / title / image?
 					a.setTitle(orgTitle);
 				}
 			}
@@ -313,6 +312,5 @@ public class Browser extends Activity {
 		super.onResume();
 		CookieSyncManager.getInstance().startSync();
 	}
-
 
 }

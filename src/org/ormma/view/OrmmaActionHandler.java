@@ -6,7 +6,6 @@
  *  be found in the AUTHORS file in the root of the source tree.
  */
 
-
 package org.ormma.view;
 
 import java.util.HashMap;
@@ -27,49 +26,53 @@ import android.widget.RelativeLayout;
 
 /**
  * Activity class to handle full screen audio/video
+ * 
  * @author Roshan
- *
+ * 
  */
 public class OrmmaActionHandler extends Activity {
 
 	private HashMap<ACTION, Object> actionData = new HashMap<ACTION, Object>();
 	private RelativeLayout layout;
-		
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		Bundle data = getIntent().getExtras();
-		
+
 		layout = new RelativeLayout(OrmmaActionHandler.this);
-		layout.setLayoutParams(new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+		layout.setLayoutParams(new ViewGroup.LayoutParams(
+				LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 		setContentView(layout);
-		
+
 		doAction(data);
-		
+
 	}
 
 	/**
 	 * Perform action - Play audio/video
-	 * @param data - Action data
+	 * 
+	 * @param data
+	 *            - Action data
 	 */
 	private void doAction(Bundle data) {
 
 		String actionData = data.getString(OrmmaView.ACTION_KEY);
-				
-		if(actionData == null)
+
+		if (actionData == null)
 			return;
-		
-		OrmmaView.ACTION actionType = OrmmaView.ACTION.valueOf(actionData); 
-		
+
+		OrmmaView.ACTION actionType = OrmmaView.ACTION.valueOf(actionData);
+
 		switch (actionType) {
 		case PLAY_AUDIO: {
-			OrmmaPlayer player = initPlayer(data,actionType);			
+			OrmmaPlayer player = initPlayer(data, actionType);
 			player.playAudio();
 		}
 			break;
 		case PLAY_VIDEO: {
-			OrmmaPlayer player = initPlayer(data,actionType);
+			OrmmaPlayer player = initPlayer(data, actionType);
 			player.playVideo();
 		}
 			break;
@@ -77,61 +80,69 @@ public class OrmmaActionHandler extends Activity {
 			break;
 		}
 	}
-	
+
 	/**
 	 * Create and initialize player
-	 * @param playData - Play data
-	 * @param actionType - type of action
+	 * 
+	 * @param playData
+	 *            - Play data
+	 * @param actionType
+	 *            - type of action
 	 * @return
 	 */
-	OrmmaPlayer initPlayer(Bundle playData,ACTION actionType){				
+	OrmmaPlayer initPlayer(Bundle playData, ACTION actionType) {
 
-		PlayerProperties properties = (PlayerProperties) playData.getParcelable(OrmmaView.PLAYER_PROPERTIES);
+		PlayerProperties properties = (PlayerProperties) playData
+				.getParcelable(OrmmaView.PLAYER_PROPERTIES);
 
-		Dimensions playDimensions = (Dimensions)playData.getParcelable(OrmmaView.DIMENSIONS);		
-				
+		Dimensions playDimensions = (Dimensions) playData
+				.getParcelable(OrmmaView.DIMENSIONS);
+
 		OrmmaPlayer player = new OrmmaPlayer(getApplicationContext());
-		player.setPlayData(properties,OrmmaUtils.getData(OrmmaView.EXPAND_URL, playData));
-		
+		player.setPlayData(properties,
+				OrmmaUtils.getData(OrmmaView.EXPAND_URL, playData));
+
 		RelativeLayout.LayoutParams lp;
-		if(playDimensions == null) {
-			lp = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT);
-			lp.addRule(RelativeLayout.CENTER_IN_PARENT);				
-		}
-		else {
+		if (playDimensions == null) {
+			lp = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT,
+					LayoutParams.MATCH_PARENT);
+			lp.addRule(RelativeLayout.CENTER_IN_PARENT);
+		} else {
 			// Play video in dimensions given
-			lp = new RelativeLayout.LayoutParams(playDimensions.width, playDimensions.height);
+			lp = new RelativeLayout.LayoutParams(playDimensions.width,
+					playDimensions.height);
 			lp.topMargin = playDimensions.y;
-			lp.leftMargin = playDimensions.x;		
+			lp.leftMargin = playDimensions.x;
 
 		}
 		player.setLayoutParams(lp);
 		layout.addView(player);
-		
+
 		this.actionData.put(actionType, player);
 		setPlayerListener(player);
-		
+
 		return player;
 	}
-	
+
 	/**
 	 * Set listener
-	 * @param player - player instance
+	 * 
+	 * @param player
+	 *            - player instance
 	 */
-	private void setPlayerListener(OrmmaPlayer player){
+	private void setPlayerListener(OrmmaPlayer player) {
 		player.setListener(new OrmmaPlayerListener() {
-			
+
 			@Override
 			public void onPrepared() {
-				
-				
+
 			}
-			
+
 			@Override
-			public void onError() {				
+			public void onError() {
 				finish();
 			}
-			
+
 			@Override
 			public void onComplete() {
 				finish();
@@ -141,19 +152,20 @@ public class OrmmaActionHandler extends Activity {
 
 	@Override
 	protected void onStop() {
-		
-		for(Map.Entry<ACTION, Object> entry: actionData.entrySet()){
-			switch(entry.getKey()){
-			case PLAY_AUDIO : 
-			case PLAY_VIDEO : {
-				OrmmaPlayer player = (OrmmaPlayer)entry.getValue();
+
+		for (Map.Entry<ACTION, Object> entry : actionData.entrySet()) {
+			switch (entry.getKey()) {
+			case PLAY_AUDIO:
+			case PLAY_VIDEO: {
+				OrmmaPlayer player = (OrmmaPlayer) entry.getValue();
 				player.releasePlayer();
-			}			
-			break;
-			default : break;
-		}	
-	}
+			}
+				break;
+			default:
+				break;
+			}
+		}
 		super.onStop();
-	}	
-	
+	}
+
 }

@@ -21,12 +21,13 @@ import de.guj.ems.mobile.sdk.util.SdkLog;
 import de.guj.ems.mobile.sdk.util.SdkUtil;
 
 /**
- * The Class OrmmaNetworkController.  OrmmaController for interacting with network states
+ * The Class OrmmaNetworkController. OrmmaController for interacting with
+ * network states
  */
 public class OrmmaNetworkController extends OrmmaController {
-	
+
 	private static final String SdkLog_TAG = "OrmmaNetworkController";
-	
+
 	private ConnectivityManager mConnectivityManager;
 	private int mNetworkListenerCount;
 	private OrmmaNetworkBroadcastReceiver mBroadCastReceiver;
@@ -34,35 +35,39 @@ public class OrmmaNetworkController extends OrmmaController {
 
 	/**
 	 * Instantiates a new ormma network controller.
-	 *
-	 * @param adView the ad view
-	 * @param context the context
+	 * 
+	 * @param adView
+	 *            the ad view
+	 * @param context
+	 *            the context
 	 */
 	public OrmmaNetworkController(OrmmaView adView, Context context) {
 		super(adView, context);
-		mConnectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+		mConnectivityManager = (ConnectivityManager) context
+				.getSystemService(Context.CONNECTIVITY_SERVICE);
 	}
 
 	/**
 	 * Gets the network.
-	 *
+	 * 
 	 * @return the network
 	 */
 	@JavascriptInterface
 	public String getNetwork() {
-		
+
 		Context c = SdkUtil.getContext();
-		if (c.getPackageManager().checkPermission(permission.ACCESS_NETWORK_STATE, c.getPackageName()) != PackageManager.PERMISSION_GRANTED) {
-			SdkLog.w(SdkLog_TAG, "Access Network State not granted in Manifest - assuming ONLINE.");
+		if (c.getPackageManager().checkPermission(
+				permission.ACCESS_NETWORK_STATE, c.getPackageName()) != PackageManager.PERMISSION_GRANTED) {
+			SdkLog.w(SdkLog_TAG,
+					"Access Network State not granted in Manifest - assuming ONLINE.");
 			return "unknown";
 		}
-		
+
 		NetworkInfo ni = mConnectivityManager.getActiveNetworkInfo();
-        String networkType = "unknown";
-		if (ni == null){
+		String networkType = "unknown";
+		if (ni == null) {
 			networkType = "offline";
-		}
-		else{
+		} else {
 			switch (ni.getState()) {
 			case UNKNOWN:
 				networkType = "unknown";
@@ -115,12 +120,15 @@ public class OrmmaNetworkController extends OrmmaController {
 	 * On connection changed.
 	 */
 	public void onConnectionChanged() {
-		String script = "window.ormmaview.fireChangeEvent({ network: \'" + getNetwork() + "\'});";
-		SdkLog.d(SdkLog_TAG, script );
+		String script = "window.ormmaview.fireChangeEvent({ network: \'"
+				+ getNetwork() + "\'});";
+		SdkLog.d(SdkLog_TAG, script);
 		mOrmmaView.injectJavaScript(script);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ormma.controller.OrmmaController#stopAllListeners()
 	 */
 	@Override
